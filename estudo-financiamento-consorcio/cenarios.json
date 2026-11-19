@@ -1,0 +1,2268 @@
+{
+ "base": {
+  "preco": 100000,
+  "ipca": 0.045,
+  "cdi": 0.12,
+  "ir": 0.15,
+  "deprec": 0.1,
+  "mobilidade": 1000,
+  "entradaPct": 0.2,
+  "taxaFinM": 0.0173,
+  "prazoFin": 48,
+  "tarifas": 1300,
+  "taxaAdm": 0.12,
+  "fundoReserva": 0.02,
+  "prazoCons": 80,
+  "lanceLivrePct": 0,
+  "lanceEmbutidoPct": 0,
+  "devolveFR": 0
+ },
+ "adms": [
+  {
+   "id": "rodobens",
+   "nome": "Rodobens",
+   "taxaAdm": 0.1,
+   "fundoReserva": 0.02,
+   "prazoCons": 80
+  },
+  {
+   "id": "itau",
+   "nome": "Itaú Consórcio",
+   "taxaAdm": 0.12,
+   "fundoReserva": 0.02,
+   "prazoCons": 80
+  },
+  {
+   "id": "porto",
+   "nome": "Porto Consórcio",
+   "taxaAdm": 0.136,
+   "fundoReserva": 0.02,
+   "prazoCons": 80
+  }
+ ],
+ "taxasFin": [
+  {
+   "id": "montadora",
+   "nome": "Banco de montadora (1,49% a.m.)",
+   "taxaFinM": 0.0149
+  },
+  {
+   "id": "mediana",
+   "nome": "Mediana do mercado (1,73% a.m.)",
+   "taxaFinM": 0.0173
+  },
+  {
+   "id": "mediaBC",
+   "nome": "Média BC (1,97% a.m.)",
+   "taxaFinM": 0.0197
+  }
+ ],
+ "janelas": [
+  1,
+  3,
+  6,
+  12,
+  18,
+  24,
+  36,
+  48,
+  60,
+  72,
+  80
+ ],
+ "cenarios": [
+  {
+   "mobilidade": 0,
+   "prazoFin": 36,
+   "financiamento": {
+    "montadora": {
+     "vp": 79321,
+     "pmt": 3025,
+     "total": 128902,
+     "cetA": 0.23469331303449947,
+     "iof": 2514
+    },
+    "mediana": {
+     "vp": 83140,
+     "pmt": 3148,
+     "total": 133322,
+     "cetA": 0.2709672685069029,
+     "iof": 2526
+    },
+    "mediaBC": {
+     "vp": 87044,
+     "pmt": 3273,
+     "total": 137841,
+     "cetA": 0.3082356436003113,
+     "iof": 2538
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 56900,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 56279,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 55326,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 53343,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 51254,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 49051,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 44282,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 38983,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 33094,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 26552,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 21792,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 41334
+    },
+    "itau": {
+     "1": {
+      "vp": 58542,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 57921,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 56968,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 54986,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 52896,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 50693,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 45924,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 40625,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 34737,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 28195,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 23434,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 42976
+    },
+    "porto": {
+     "1": {
+      "vp": 59856,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 59235,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 58282,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 56300,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 54210,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 52007,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 47238,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 41939,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 36051,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 29509,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 24748,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 44290
+    }
+   },
+   "poupar": {
+    "vp": 45896,
+    "mes": 25
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "itau": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "porto": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    }
+   }
+  },
+  {
+   "mobilidade": 0,
+   "prazoFin": 48,
+   "financiamento": {
+    "montadora": {
+     "vp": 82675,
+     "pmt": 2460,
+     "total": 138071,
+     "cetA": 0.22653523518441365,
+     "iof": 2618
+    },
+    "mediana": {
+     "vp": 87757,
+     "pmt": 2588,
+     "total": 144229,
+     "cetA": 0.2626075806045447,
+     "iof": 2629
+    },
+    "mediaBC": {
+     "vp": 92979,
+     "pmt": 2720,
+     "total": 150557,
+     "cetA": 0.2996766862984046,
+     "iof": 2640
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 56900,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 56279,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 55326,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 53343,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 51254,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 49051,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 44282,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 38983,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 33094,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 26552,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 21792,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 41334
+    },
+    "itau": {
+     "1": {
+      "vp": 58542,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 57921,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 56968,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 54986,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 52896,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 50693,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 45924,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 40625,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 34737,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 28195,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 23434,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 42976
+    },
+    "porto": {
+     "1": {
+      "vp": 59856,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 59235,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 58282,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 56300,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 54210,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 52007,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 47238,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 41939,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 36051,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 29509,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 24748,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 44290
+    }
+   },
+   "poupar": {
+    "vp": 41506,
+    "mes": 29
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "itau": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "porto": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    }
+   }
+  },
+  {
+   "mobilidade": 0,
+   "prazoFin": 60,
+   "financiamento": {
+    "montadora": {
+     "vp": 85918,
+     "pmt": 2127,
+     "total": 147621,
+     "cetA": 0.2214145606573159,
+     "iof": 2678
+    },
+    "mediana": {
+     "vp": 92254,
+     "pmt": 2261,
+     "total": 155653,
+     "cetA": 0.2573751022114332,
+     "iof": 2690
+    },
+    "mediaBC": {
+     "vp": 98792,
+     "pmt": 2399,
+     "total": 163940,
+     "cetA": 0.29433745299916314,
+     "iof": 2700
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 56900,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 56279,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 55326,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 53343,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 51254,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 49051,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 44282,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 38983,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 33094,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 26552,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 21792,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 41334
+    },
+    "itau": {
+     "1": {
+      "vp": 58542,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 57921,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 56968,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 54986,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 52896,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 50693,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 45924,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 40625,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 34737,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 28195,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 23434,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 42976
+    },
+    "porto": {
+     "1": {
+      "vp": 59856,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 59235,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 58282,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 56300,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 54210,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 52007,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 47238,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 41939,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 36051,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 29509,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 24748,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 44290
+    }
+   },
+   "poupar": {
+    "vp": 37152,
+    "mes": 33
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "itau": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "porto": {
+     "montadora": 80,
+     "mediana": 80,
+     "mediaBC": 80
+    }
+   }
+  },
+  {
+   "mobilidade": 1000,
+   "prazoFin": 36,
+   "financiamento": {
+    "montadora": {
+     "vp": 79321,
+     "pmt": 3025,
+     "total": 128902,
+     "cetA": 0.23469331303449947,
+     "iof": 2514
+    },
+    "mediana": {
+     "vp": 83140,
+     "pmt": 3148,
+     "total": 133322,
+     "cetA": 0.2709672685069029,
+     "iof": 2526
+    },
+    "mediaBC": {
+     "vp": 87044,
+     "pmt": 3273,
+     "total": 137841,
+     "cetA": 0.3082356436003113,
+     "iof": 2538
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 57396,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 58742,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 60682,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 64279,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 67723,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 70811,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 76305,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 80739,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 84081,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 86291,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 87147,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 76131
+    },
+    "itau": {
+     "1": {
+      "vp": 59038,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 60385,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 62325,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 65922,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 69365,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 72453,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 77948,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 82381,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 85723,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 87933,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 88790,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 77773
+    },
+    "porto": {
+     "1": {
+      "vp": 60352,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 61699,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 63639,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 67235,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 70679,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 73767,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 79262,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 83695,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 87037,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 89247,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 90103,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 79087
+    }
+   },
+   "poupar": {
+    "vp": 68977,
+    "mes": 25
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 43,
+     "mediana": 56,
+     "mediaBC": 78
+    },
+    "itau": {
+     "montadora": 39,
+     "mediana": 50,
+     "mediaBC": 66
+    },
+    "porto": {
+     "montadora": 36,
+     "mediana": 46,
+     "mediaBC": 60
+    }
+   }
+  },
+  {
+   "mobilidade": 1000,
+   "prazoFin": 48,
+   "financiamento": {
+    "montadora": {
+     "vp": 82675,
+     "pmt": 2460,
+     "total": 138071,
+     "cetA": 0.22653523518441365,
+     "iof": 2618
+    },
+    "mediana": {
+     "vp": 87757,
+     "pmt": 2588,
+     "total": 144229,
+     "cetA": 0.2626075806045447,
+     "iof": 2629
+    },
+    "mediaBC": {
+     "vp": 92979,
+     "pmt": 2720,
+     "total": 150557,
+     "cetA": 0.2996766862984046,
+     "iof": 2640
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 57396,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 58742,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 60682,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 64279,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 67723,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 70811,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 76305,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 80739,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 84081,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 86291,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 87147,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 76131
+    },
+    "itau": {
+     "1": {
+      "vp": 59038,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 60385,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 62325,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 65922,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 69365,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 72453,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 77948,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 82381,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 85723,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 87933,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 88790,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 77773
+    },
+    "porto": {
+     "1": {
+      "vp": 60352,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 61699,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 63639,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 67235,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 70679,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 73767,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 79262,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 83695,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 87037,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 89247,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 90103,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 79087
+    }
+   },
+   "poupar": {
+    "vp": 68085,
+    "mes": 29
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 54,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "itau": {
+     "montadora": 48,
+     "mediana": 70,
+     "mediaBC": 80
+    },
+    "porto": {
+     "montadora": 44,
+     "mediana": 63,
+     "mediaBC": 80
+    }
+   }
+  },
+  {
+   "mobilidade": 1000,
+   "prazoFin": 60,
+   "financiamento": {
+    "montadora": {
+     "vp": 85918,
+     "pmt": 2127,
+     "total": 147621,
+     "cetA": 0.2214145606573159,
+     "iof": 2678
+    },
+    "mediana": {
+     "vp": 92254,
+     "pmt": 2261,
+     "total": 155653,
+     "cetA": 0.2573751022114332,
+     "iof": 2690
+    },
+    "mediaBC": {
+     "vp": 98792,
+     "pmt": 2399,
+     "total": 163940,
+     "cetA": 0.29433745299916314,
+     "iof": 2700
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 57396,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 58742,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 60682,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 64279,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 67723,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 70811,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 76305,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 80739,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 84081,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 86291,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 87147,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 76131
+    },
+    "itau": {
+     "1": {
+      "vp": 59038,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 60385,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 62325,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 65922,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 69365,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 72453,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 77948,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 82381,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 85723,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 87933,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 88790,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 77773
+    },
+    "porto": {
+     "1": {
+      "vp": 60352,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 61699,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 63639,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 67235,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 70679,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 73767,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 79262,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 83695,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 87037,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 89247,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 90103,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 79087
+    }
+   },
+   "poupar": {
+    "vp": 67116,
+    "mes": 33
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 69,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "itau": {
+     "montadora": 60,
+     "mediana": 80,
+     "mediaBC": 80
+    },
+    "porto": {
+     "montadora": 55,
+     "mediana": 80,
+     "mediaBC": 80
+    }
+   }
+  },
+  {
+   "mobilidade": 2500,
+   "prazoFin": 36,
+   "financiamento": {
+    "montadora": {
+     "vp": 79321,
+     "pmt": 3025,
+     "total": 128902,
+     "cetA": 0.23469331303449947,
+     "iof": 2514
+    },
+    "mediana": {
+     "vp": 83140,
+     "pmt": 3148,
+     "total": 133322,
+     "cetA": 0.2709672685069029,
+     "iof": 2526
+    },
+    "mediaBC": {
+     "vp": 87044,
+     "pmt": 3273,
+     "total": 137841,
+     "cetA": 0.3082356436003113,
+     "iof": 2538
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 58140,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 62438,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 68717,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 80683,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 92426,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 103450,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 124340,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 143374,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 160560,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 175898,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 185180,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 128326
+    },
+    "itau": {
+     "1": {
+      "vp": 59782,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 64081,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 70360,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 82325,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 94069,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 105092,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 125983,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 145016,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 162202,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 177541,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 186823,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 129969
+    },
+    "porto": {
+     "1": {
+      "vp": 61096,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 65395,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 71674,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 83639,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 95383,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 106406,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 127297,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 146330,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 163516,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 178855,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 188137,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 131283
+    }
+   },
+   "poupar": {
+    "vp": 103600,
+    "mes": 25
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 11,
+     "mediana": 13,
+     "mediaBC": 15
+    },
+    "itau": {
+     "montadora": 10,
+     "mediana": 12,
+     "mediaBC": 14
+    },
+    "porto": {
+     "montadora": 9,
+     "mediana": 11,
+     "mediaBC": 13
+    }
+   }
+  },
+  {
+   "mobilidade": 2500,
+   "prazoFin": 48,
+   "financiamento": {
+    "montadora": {
+     "vp": 82675,
+     "pmt": 2460,
+     "total": 138071,
+     "cetA": 0.22653523518441365,
+     "iof": 2618
+    },
+    "mediana": {
+     "vp": 87757,
+     "pmt": 2588,
+     "total": 144229,
+     "cetA": 0.2626075806045447,
+     "iof": 2629
+    },
+    "mediaBC": {
+     "vp": 92979,
+     "pmt": 2720,
+     "total": 150557,
+     "cetA": 0.2996766862984046,
+     "iof": 2640
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 58140,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 62438,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 68717,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 80683,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 92426,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 103450,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 124340,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 143374,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 160560,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 175898,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 185180,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 128326
+    },
+    "itau": {
+     "1": {
+      "vp": 59782,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 64081,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 70360,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 82325,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 94069,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 105092,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 125983,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 145016,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 162202,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 177541,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 186823,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 129969
+    },
+    "porto": {
+     "1": {
+      "vp": 61096,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 65395,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 71674,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 83639,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 95383,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 106406,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 127297,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 146330,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 163516,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 178855,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 188137,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 131283
+    }
+   },
+   "poupar": {
+    "vp": 107952,
+    "mes": 29
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 13,
+     "mediana": 15,
+     "mediaBC": 18
+    },
+    "itau": {
+     "montadora": 12,
+     "mediana": 14,
+     "mediaBC": 17
+    },
+    "porto": {
+     "montadora": 11,
+     "mediana": 14,
+     "mediaBC": 16
+    }
+   }
+  },
+  {
+   "mobilidade": 2500,
+   "prazoFin": 60,
+   "financiamento": {
+    "montadora": {
+     "vp": 85918,
+     "pmt": 2127,
+     "total": 147621,
+     "cetA": 0.2214145606573159,
+     "iof": 2678
+    },
+    "mediana": {
+     "vp": 92254,
+     "pmt": 2261,
+     "total": 155653,
+     "cetA": 0.2573751022114332,
+     "iof": 2690
+    },
+    "mediaBC": {
+     "vp": 98792,
+     "pmt": 2399,
+     "total": 163940,
+     "cetA": 0.29433745299916314,
+     "iof": 2700
+    }
+   },
+   "consorcio": {
+    "rodobens": {
+     "1": {
+      "vp": 58140,
+      "taxaImplicitaAa": 0.07578335709543627
+     },
+     "3": {
+      "vp": 62438,
+      "taxaImplicitaAa": 0.08014541901742844
+     },
+     "6": {
+      "vp": 68717,
+      "taxaImplicitaAa": 0.0877753431852486
+     },
+     "12": {
+      "vp": 80683,
+      "taxaImplicitaAa": 0.1088749350086553
+     },
+     "18": {
+      "vp": 92426,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 103450,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 124340,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 143374,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 160560,
+      "taxaImplicitaAa": -0.04710532416668456
+     },
+     "72": {
+      "vp": 175898,
+      "taxaImplicitaAa": -0.009076112911005074
+     },
+     "80": {
+      "vp": 185180,
+      "taxaImplicitaAa": 0.006932488375321233
+     },
+     "esperado": 128326
+    },
+    "itau": {
+     "1": {
+      "vp": 59782,
+      "taxaImplicitaAa": 0.0818019762140687
+     },
+     "3": {
+      "vp": 64081,
+      "taxaImplicitaAa": 0.08655787043571395
+     },
+     "6": {
+      "vp": 70360,
+      "taxaImplicitaAa": 0.09489486187094065
+     },
+     "12": {
+      "vp": 82325,
+      "taxaImplicitaAa": 0.11808813018907394
+     },
+     "18": {
+      "vp": 94069,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 105092,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 125983,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 145016,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 162202,
+      "taxaImplicitaAa": -0.06038953387680335
+     },
+     "72": {
+      "vp": 177541,
+      "taxaImplicitaAa": -0.016308686561380625
+     },
+     "80": {
+      "vp": 186823,
+      "taxaImplicitaAa": 0.001281624402392545
+     },
+     "esperado": 129969
+    },
+    "porto": {
+     "1": {
+      "vp": 61096,
+      "taxaImplicitaAa": 0.0865930006046729
+     },
+     "3": {
+      "vp": 65395,
+      "taxaImplicitaAa": 0.09166771275730845
+     },
+     "6": {
+      "vp": 71674,
+      "taxaImplicitaAa": 0.1005792548632336
+     },
+     "12": {
+      "vp": 83639,
+      "taxaImplicitaAa": 0.1254916987336836
+     },
+     "18": {
+      "vp": 95383,
+      "taxaImplicitaAa": null
+     },
+     "24": {
+      "vp": 106406,
+      "taxaImplicitaAa": null
+     },
+     "36": {
+      "vp": 127297,
+      "taxaImplicitaAa": null
+     },
+     "48": {
+      "vp": 146330,
+      "taxaImplicitaAa": null
+     },
+     "60": {
+      "vp": 163516,
+      "taxaImplicitaAa": -0.07111000101667975
+     },
+     "72": {
+      "vp": 178855,
+      "taxaImplicitaAa": -0.02202385494157344
+     },
+     "80": {
+      "vp": 188137,
+      "taxaImplicitaAa": -0.0031721312564084725
+     },
+     "esperado": 131283
+    }
+   },
+   "poupar": {
+    "vp": 112061,
+    "mes": 33
+   },
+   "aVista": {
+    "vp": 65232
+   },
+   "breakEven": {
+    "rodobens": {
+     "montadora": 14,
+     "mediana": 17,
+     "mediaBC": 21
+    },
+    "itau": {
+     "montadora": 13,
+     "mediana": 17,
+     "mediaBC": 20
+    },
+    "porto": {
+     "montadora": 13,
+     "mediana": 16,
+     "mediaBC": 19
+    }
+   }
+  }
+ ],
+ "sensibilidade": {
+  "cdi": [
+   {
+    "cdi": 0.09,
+    "fin": 86618,
+    "cons12": 66860,
+    "consEsp": 78356,
+    "be": 62
+   },
+   {
+    "cdi": 0.105,
+    "fin": 87269,
+    "cons12": 66421,
+    "consEsp": 78119,
+    "be": 65
+   },
+   {
+    "cdi": 0.12,
+    "fin": 87757,
+    "cons12": 65922,
+    "consEsp": 77773,
+    "be": 70
+   },
+   {
+    "cdi": 0.135,
+    "fin": 88101,
+    "cons12": 65371,
+    "consEsp": 77335,
+    "be": 77
+   },
+   {
+    "cdi": 0.15,
+    "fin": 88320,
+    "cons12": 64779,
+    "consEsp": 76820,
+    "be": 80
+   }
+  ],
+  "taxaAdm": [
+   {
+    "taxaAdm": 0.065,
+    "cons12": 61405,
+    "be": 80
+   },
+   {
+    "taxaAdm": 0.1,
+    "cons12": 64279,
+    "be": 80
+   },
+   {
+    "taxaAdm": 0.12,
+    "cons12": 65922,
+    "be": 70
+   },
+   {
+    "taxaAdm": 0.15,
+    "cons12": 68385,
+    "be": 58
+   },
+   {
+    "taxaAdm": 0.175,
+    "cons12": 70438,
+    "be": 50
+   },
+   {
+    "taxaAdm": 0.2,
+    "cons12": 72491,
+    "be": 44
+   }
+  ],
+  "lance": [
+   {
+    "lanceLivre": 0,
+    "cons1": 59038,
+    "cons6": 62325
+   },
+   {
+    "lanceLivre": 0.1,
+    "cons1": 60767,
+    "cons6": 63761
+   },
+   {
+    "lanceLivre": 0.2,
+    "cons1": 62496,
+    "cons6": 65198
+   },
+   {
+    "lanceLivre": 0.3,
+    "cons1": 64225,
+    "cons6": 66634
+   }
+  ],
+  "embutido": [
+   {
+    "embutido": 0,
+    "cons1": 59038,
+    "cons3": 60385
+   },
+   {
+    "embutido": 0.15,
+    "cons1": 61105,
+    "cons3": 62526
+   },
+   {
+    "embutido": 0.25,
+    "cons1": 62943,
+    "cons3": 64428
+   },
+   {
+    "embutido": 0.3,
+    "cons1": 64058,
+    "cons3": 65584
+   }
+  ]
+ },
+ "mapa": {
+  "rodobens": [
+   [
+    -30857,
+    -30609,
+    -30361,
+    -30113,
+    -29865,
+    -29617,
+    -29369
+   ],
+   [
+    -31478,
+    -30246,
+    -29014,
+    -27782,
+    -26550,
+    -25318,
+    -24087
+   ],
+   [
+    -32431,
+    -29753,
+    -27074,
+    -24396,
+    -21718,
+    -19039,
+    -16361
+   ],
+   [
+    -34413,
+    -28945,
+    -23478,
+    -18010,
+    -12542,
+    -7074,
+    -1606
+   ],
+   [
+    -36503,
+    -28268,
+    -20034,
+    -11799,
+    -3565,
+    4670,
+    12904
+   ],
+   [
+    -38706,
+    -27826,
+    -16946,
+    -6066,
+    4813,
+    15693,
+    26573
+   ],
+   [
+    -43475,
+    -27463,
+    -11452,
+    4560,
+    20572,
+    36584,
+    52595
+   ],
+   [
+    -48774,
+    -27896,
+    -7018,
+    13861,
+    34739,
+    55617,
+    76495
+   ],
+   [
+    -54662,
+    -29169,
+    -3676,
+    21817,
+    47310,
+    72803,
+    98296
+   ],
+   [
+    -61204,
+    -31335,
+    -1466,
+    28403,
+    58272,
+    88141,
+    118011
+   ],
+   [
+    -65965,
+    -33287,
+    -610,
+    32068,
+    64746,
+    97424,
+    130101
+   ]
+  ],
+  "itau": [
+   [
+    -29214,
+    -28966,
+    -28718,
+    -28470,
+    -28222,
+    -27975,
+    -27727
+   ],
+   [
+    -29836,
+    -28604,
+    -27372,
+    -26140,
+    -24908,
+    -23676,
+    -22444
+   ],
+   [
+    -30789,
+    -28110,
+    -25432,
+    -22754,
+    -20075,
+    -17397,
+    -14718
+   ],
+   [
+    -32771,
+    -27303,
+    -21835,
+    -16367,
+    -10900,
+    -5432,
+    36
+   ],
+   [
+    -34861,
+    -26626,
+    -18392,
+    -10157,
+    -1923,
+    6312,
+    14547
+   ],
+   [
+    -37063,
+    -26184,
+    -15304,
+    -4424,
+    6456,
+    17335,
+    28215
+   ],
+   [
+    -41833,
+    -25821,
+    -9809,
+    6203,
+    22214,
+    38226,
+    54238
+   ],
+   [
+    -47132,
+    -26254,
+    -5375,
+    15503,
+    36381,
+    57259,
+    78138
+   ],
+   [
+    -53020,
+    -27527,
+    -2034,
+    23459,
+    48952,
+    74446,
+    99939
+   ],
+   [
+    -59562,
+    -29693,
+    176,
+    30045,
+    59915,
+    89784,
+    119653
+   ],
+   [
+    -64323,
+    -31645,
+    1033,
+    33711,
+    66388,
+    99066,
+    131744
+   ]
+  ],
+  "porto": [
+   [
+    -27901,
+    -27653,
+    -27405,
+    -27157,
+    -26909,
+    -26661,
+    -26413
+   ],
+   [
+    -28522,
+    -27290,
+    -26058,
+    -24826,
+    -23594,
+    -22362,
+    -21130
+   ],
+   [
+    -29475,
+    -26796,
+    -24118,
+    -21440,
+    -18761,
+    -16083,
+    -13405
+   ],
+   [
+    -31457,
+    -25989,
+    -20521,
+    -15053,
+    -9586,
+    -4118,
+    1350
+   ],
+   [
+    -33547,
+    -25312,
+    -17078,
+    -8843,
+    -609,
+    7626,
+    15860
+   ],
+   [
+    -35749,
+    -24870,
+    -13990,
+    -3110,
+    7770,
+    18649,
+    29529
+   ],
+   [
+    -40519,
+    -24507,
+    -8495,
+    7517,
+    23528,
+    39540,
+    55552
+   ],
+   [
+    -45818,
+    -24940,
+    -4061,
+    16817,
+    37695,
+    58573,
+    79452
+   ],
+   [
+    -51706,
+    -26213,
+    -720,
+    24773,
+    50266,
+    75759,
+    101253
+   ],
+   [
+    -58248,
+    -28379,
+    1490,
+    31359,
+    61229,
+    91098,
+    120967
+   ],
+   [
+    -63009,
+    -30331,
+    2347,
+    35024,
+    67702,
+    100380,
+    133058
+   ]
+  ]
+ },
+ "mobGrid": [
+  0,
+  500,
+  1000,
+  1500,
+  2000,
+  2500,
+  3000
+ ],
+ "mobEquilibrio": {
+  "rodobens": {
+   "montadora": 1188,
+   "mediana": 1334,
+   "mediaBC": 1484
+  },
+  "itau": {
+   "montadora": 1141,
+   "mediana": 1287,
+   "mediaBC": 1437
+  },
+  "porto": {
+   "montadora": 1103,
+   "mediana": 1249,
+   "mediaBC": 1399
+  }
+ },
+ "mobEquilibrioPoupar": 1740
+}
