@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carro em 30 Dias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: coluna única; a calculadora (form + resultado) é o centro; o resto explica e sustenta. */
+:root {
+  --bg: #f4f5f2; --surface: #fcfcfb; --ink: #11171a; --ink-2: #4b5457; --muted: #7d8587;
+  --rule: #dde1dc; --rule-strong: #c3c8c2; --tint: #e9ece7;
+  --cons: #2a78d6; --fin: #52514e; --try: #1baf7a; --carta: #eb6834;
+  --good-ink: #006300; --bad-ink: #b3261e; --band: rgba(17, 23, 26, 0.07);
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111313; --surface: #191b1a; --ink: #eef0ec; --ink-2: #b8beba; --muted: #868d8a;
+    --rule: #2b2f2d; --rule-strong: #3d423f; --tint: #222624;
+    --cons: #3987e5; --fin: #a9aea9; --try: #199e70; --carta: #d95926;
+    --good-ink: #3fc25a; --bad-ink: #f08a84; --band: rgba(238, 240, 236, 0.08);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111313; --surface: #191b1a; --ink: #eef0ec; --ink-2: #b8beba; --muted: #868d8a;
+  --rule: #2b2f2d; --rule-strong: #3d423f; --tint: #222624;
+  --cons: #3987e5; --fin: #a9aea9; --try: #199e70; --carta: #d95926;
+  --good-ink: #3fc25a; --bad-ink: #f08a84; --band: rgba(238, 240, 236, 0.08);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 52px; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.12; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2.1rem, 6vw, 3.4rem); font-weight: 800; }
+h2 { font-size: clamp(1.45rem, 3.4vw, 1.9rem); font-weight: 800; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+p { margin: 0; }
+a { color: inherit; text-decoration-color: var(--muted); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--cons); outline-offset: 2px; border-radius: 4px; }
+.eyebrow { font-family: var(--f-data); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.note { font-size: 0.875rem; color: var(--ink-2); }
+section { display: grid; gap: 18px; }
+.sec-head { display: grid; gap: 8px; border-top: 1px solid var(--rule-strong); padding-top: 20px; }
+header.hero { display: grid; gap: 18px; padding-top: 44px; }
+.lede { font-size: 1.15rem; color: var(--ink-2); max-width: 62ch; }
+
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+@media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 460px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+.tiles > div { background: var(--surface); padding: 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.tiles .big { font-family: var(--f-display); font-weight: 800; font-size: 1.55rem; line-height: 1.1; }
+.tiles p { font-size: 0.875rem; color: var(--ink-2); }
+
+.calc { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 820px) { .calc { grid-template-columns: minmax(0, 1fr); } }
+.form { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; display: grid; gap: 18px; }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; }
+legend { font-family: var(--f-display); font-weight: 700; font-size: 0.95rem; padding: 0; margin-bottom: 2px; }
+.field { display: grid; grid-template-columns: 1fr 108px; gap: 10px; align-items: center; font-size: 0.875rem; }
+.field label { color: var(--ink-2); }
+.field input, .field select { font: inherit; font-family: var(--f-data); font-size: 0.875rem; width: 100%; padding: 6px 8px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--bg); color: var(--ink); text-align: right; }
+.field select { text-align: left; }
+.range { display: grid; gap: 4px; font-size: 0.875rem; }
+.range .top { display: flex; justify-content: space-between; color: var(--ink-2); }
+.range .top b { font-family: var(--f-data); color: var(--ink); font-weight: 500; }
+.range input { width: 100%; accent-color: var(--try); }
+
+.out { display: grid; gap: 16px; min-width: 0; }
+.decision { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; display: grid; gap: 6px; }
+.pill { justify-self: start; font-family: var(--f-data); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; border: 1px solid currentColor; }
+.pill.go { color: var(--good-ink); }
+.pill.stop { color: var(--bad-ink); }
+.decision .msg { font-size: 1.05rem; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+@media (max-width: 560px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.kpis > div { background: var(--surface); padding: 14px; display: grid; gap: 4px; min-width: 0; align-content: start; }
+.kpis .k-l { font-size: 0.75rem; color: var(--ink-2); }
+.kpis .k-v { font-family: var(--f-display); font-weight: 700; font-size: 1.25rem; }
+.kpis .k-s { font-size: 0.75rem; color: var(--muted); }
+
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; display: grid; gap: 12px; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.8125rem; color: var(--ink-2); }
+.legend i { display: inline-block; width: 18px; height: 2px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.plot { position: relative; }
+.plot svg { display: block; width: 100%; height: auto; overflow: visible; }
+.plot text { font-family: var(--f-data); font-size: 11px; fill: var(--muted); }
+.plot text.lbl { fill: var(--ink-2); font-family: var(--f-body); font-size: 12px; }
+.plot text.val { fill: var(--ink); font-family: var(--f-data); font-size: 12px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 8px 10px; font-size: 0.8125rem; box-shadow: 0 6px 20px rgba(0,0,0,0.12); min-width: 200px; display: grid; gap: 3px; }
+.tip .t-h { color: var(--muted); font-size: 0.75rem; }
+.tip .t-r { display: flex; justify-content: space-between; gap: 14px; }
+.tip .t-r b { font-family: var(--f-data); font-weight: 500; }
+.tip .t-r span { color: var(--ink-2); }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th { font-weight: 600; color: var(--ink-2); font-size: 0.8125rem; background: var(--tint); white-space: nowrap; }
+td.n, th.n { text-align: right; white-space: nowrap; font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+tbody tr:last-child td { border-bottom: 0; }
+caption { caption-side: bottom; text-align: left; padding: 10px 12px; color: var(--ink-2); font-size: 0.8125rem; }
+.win { color: var(--good-ink); font-weight: 600; }
+.lose-t { color: var(--bad-ink); }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.timeline li { display: grid; grid-template-columns: 92px 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--rule); }
+.timeline li:first-child { border-top: 0; }
+.timeline .d { font-family: var(--f-data); font-size: 0.8125rem; color: var(--ink-2); padding-top: 2px; }
+.timeline .alt { color: var(--bad-ink); }
+.timeline p { font-size: 0.9375rem; color: var(--ink-2); }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+ul.clean { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.sources { font-size: 0.8125rem; color: var(--ink-2); display: grid; gap: 6px; padding-left: 1.1em; margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">Cenário · preciso do carro em até 30 dias · dados de novembro de 2026</span>
+    <h1>Consórcio ou financiamento para ter o carro em 30 dias</h1>
+    <p class="lede">Com prazo de 30 dias, o consórcio só entra no jogo de dois jeitos: ganhar com lance na primeira assembleia ou comprar uma carta já contemplada. Quando dá certo, sai muito mais barato que financiar. Quando não dá, a perda é pequena e você financia do mesmo jeito.</p>
+  </header>
+
+  <section aria-labelledby="h-resumo">
+    <div class="tiles" id="h-resumo">
+      <div><span class="eyebrow">Se o lance ganhar</span><span class="big">−R$ 13 a 27 mil</span><p>Economia em valor presente frente a financiar 48× (carro de R$ 100 mil), conforme administradora e tamanho do lance.</p></div>
+      <div><span class="eyebrow">Se não ganhar</span><span class="big">R$ 0,7 a 1,4 mil</span><p>Perda de desistir da cota após 1 ou 2 parcelas. Lance que não vence não é cobrado.</p></div>
+      <div><span class="eyebrow">Chance mínima</span><span class="big">5% a 10%</span><p>Probabilidade de contemplação a partir da qual tentar o lance compensa, em média.</p></div>
+      <div><span class="eyebrow">Financiar só ganha</span><span class="big">abaixo de 0,9% a.m.</span><p>Taxa de financiamento que empata com o consórcio contemplado. Só promoção de montadora chega lá.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-calc">
+    <div class="sec-head"><span class="eyebrow">Calculadora</span><h2 id="h-calc">Vale tentar o consórcio no seu caso?</h2></div>
+    <p class="prose">Preencha com a proposta do banco e a simulação da administradora. O ponto mais incerto é a chance de o seu lance vencer: estime pelas atas das últimas assembleias do grupo (veja se o seu lance supera o menor lance vencedor recente).</p>
+    <div class="calc">
+      <form class="form" id="form" autocomplete="off">
+        <fieldset>
+          <legend>Carro e mercado</legend>
+          <div class="field"><label for="f-preco">Preço do carro (R$)</label><input id="f-preco" type="number" step="1000" min="10000" value="100000"></div>
+          <div class="field"><label for="f-cdi">CDI médio (% a.a.)</label><input id="f-cdi" type="number" step="0.25" value="12"></div>
+          <div class="field"><label for="f-ipca">Reajuste do carro (% a.a.)</label><input id="f-ipca" type="number" step="0.25" value="4.5"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Financiamento (plano B)</legend>
+          <div class="field"><label for="f-tx">Taxa (% a.m.)</label><input id="f-tx" type="number" step="0.01" min="0.01" value="1.49"></div>
+          <div class="field"><label for="f-pf">Prazo (meses)</label><select id="f-pf"><option>24</option><option>36</option><option selected>48</option><option>60</option></select></div>
+          <div class="field"><label for="f-ent">Entrada (%)</label><input id="f-ent" type="number" step="5" min="0" max="90" value="20"></div>
+          <div class="field"><label for="f-tar">Tarifas (R$)</label><input id="f-tar" type="number" step="100" min="0" value="1300"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Consórcio com lance</legend>
+          <div class="field"><label for="f-adm">Administradora</label><select id="f-adm"><option value="0">Rodobens</option><option value="1" selected>Itaú</option><option value="2">Porto</option><option value="x">Outra</option></select></div>
+          <div class="field"><label for="f-ta">Taxa de adm. total (%)</label><input id="f-ta" type="number" step="0.5" min="0" value="12"></div>
+          <div class="field"><label for="f-fr">Fundo de reserva (%)</label><input id="f-fr" type="number" step="0.5" min="0" value="2"></div>
+          <div class="field"><label for="f-pc">Prazo (meses)</label><input id="f-pc" type="number" step="1" min="12" max="200" value="80"></div>
+          <div class="field"><label for="f-ll">Lance livre (% da carta)</label><input id="f-ll" type="number" step="5" min="0" max="80" value="20"></div>
+          <div class="field"><label for="f-le">Lance embutido (% da carta)</label><input id="f-le" type="number" step="5" min="0" max="30" value="25"></div>
+          <div class="range">
+            <div class="top"><label for="f-p">Chance de o lance vencer</label><b id="f-p-out">40%</b></div>
+            <input id="f-p" type="range" min="0" max="100" step="5" value="40">
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Se não for contemplado</legend>
+          <div class="field"><label for="f-np">Parcelas pagas antes de desistir</label><input id="f-np" type="number" step="1" min="0" max="6" value="1"></div>
+          <div class="field"><label for="f-multa">Multa na desistência (%)</label><input id="f-multa" type="number" step="1" min="0" max="50" value="15"></div>
+        </fieldset>
+      </form>
+
+      <div class="out">
+        <div class="decision" aria-live="polite"><span class="pill" id="d-pill"></span><p class="msg" id="d-msg"></p></div>
+        <div class="kpis" id="kpis"></div>
+        <div class="card">
+          <h3>Custo esperado de tentar o lance, conforme a chance de vencer</h3>
+          <div class="legend">
+            <span><i style="background:var(--try)"></i>Tentar consórcio, plano B financiamento</span>
+            <span><i style="background:var(--fin)"></i>Financiar direto</span>
+          </div>
+          <div class="plot" id="plot-p"></div>
+          <p class="note" id="plot-p-cap"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-lances">
+    <div class="sec-head"><span class="eyebrow">Comparativo</span><h2 id="h-lances">Estratégias de lance nas três administradoras</h2></div>
+    <p class="prose">Custo em valor presente se a cota for contemplada na primeira assembleia, com os parâmetros de mercado e financiamento da calculadora. A última coluna é a taxa de financiamento que empata: acima dela, o consórcio contemplado é mais barato.</p>
+    <div class="tbl-wrap"><table id="tbl-lances"></table></div>
+  </section>
+
+  <section aria-labelledby="h-carta">
+    <div class="sec-head"><span class="eyebrow">Alternativa sem sorteio</span><h2 id="h-carta">Comprar uma carta já contemplada</h2></div>
+    <p class="prose">Você paga ao dono da cota o que ele já pagou mais um ágio e assume as parcelas restantes. Não depende de assembleia, então cabe nos 30 dias se a administradora aprovar a transferência rápido. O ágio citado para veículos fica em geral entre 12% e 25%.</p>
+    <div class="calc">
+      <form class="form" id="form-carta" autocomplete="off">
+        <fieldset>
+          <legend>Carta à venda</legend>
+          <div class="field"><label for="c-valor">Valor da carta (R$)</label><input id="c-valor" type="number" step="1000" min="10000" value="100000"></div>
+          <div class="field"><label for="c-rest">Parcelas restantes</label><input id="c-rest" type="number" step="1" min="1" max="200" value="60"></div>
+          <div class="field"><label for="c-parc">Parcela atual (R$)</label><input id="c-parc" type="number" step="10" min="0" value="1425"></div>
+          <div class="field"><label for="c-pago">Já pago pelo vendedor (R$)</label><input id="c-pago" type="number" step="500" min="0" value="28500"></div>
+          <div class="field"><label for="c-agio">Ágio pedido (% sobre o pago)</label><input id="c-agio" type="number" step="1" min="0" value="20"></div>
+        </fieldset>
+      </form>
+      <div class="out">
+        <div class="decision" aria-live="polite"><span class="pill" id="c-pill"></span><p class="msg" id="c-msg"></p></div>
+        <div class="kpis" id="c-kpis"></div>
+        <p class="note">Usa preço, CDI, reajuste e o financiamento preenchidos na calculadora acima. Se a carta for menor que o preço do carro, a diferença sai do seu bolso e entra no cálculo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-prazo">
+    <div class="sec-head"><span class="eyebrow">Cronograma</span><h2 id="h-prazo">Como fazer caber em 30 dias</h2></div>
+    <div class="two">
+      <ol class="timeline">
+        <li><span class="d">Dia 0</span><div><h3>Pré-aprovação do financiamento</h3><p>Deixe o plano B pronto antes de tudo. Cote o banco da montadora e compare o CET.</p></div></li>
+        <li><span class="d">Dias 1–3</span><div><h3>Adesão a grupo em andamento</h3><p>Nunca grupo em formação. Exija assembleia nos próximos 10 a 15 dias e peça as atas com os lances vencedores.</p></div></li>
+        <li><span class="d">Até dia 15</span><div><h3>Assembleia com lance</h3><p>Ofereça lance acima do menor lance vencedor recente. Peça que o lance abata o valor da parcela, não o prazo.</p></div></li>
+        <li><span class="d">+3 dias úteis</span><div><h3>Pagamento do lance livre</h3><p>Só é cobrado se vencer. O embutido sai da própria carta.</p></div></li>
+        <li><span class="d">+7 a 15 dias</span><div><h3>Análise de crédito e faturamento</h3><p>Documentos, alienação do carro à administradora e liberação do crédito. É a etapa que costuma estourar o prazo.</p></div></li>
+        <li><span class="d alt">Se não vencer</span><div><h3>Financie no dia seguinte</h3><p>Desista da cota. A devolução vem quando a cota for sorteada ou no fim do grupo, com multa.</p></div></li>
+      </ol>
+      <div class="card" style="align-content:start">
+        <h3>Quando financiar direto</h3>
+        <ul class="clean note">
+          <li>Há taxa promocional de montadora abaixo da taxa de empate da tabela (em geral 0,4% a 0,9% a.m.).</li>
+          <li>Nenhuma administradora tem grupo com assembleia a tempo.</li>
+          <li>O menor lance vencedor do grupo está acima do que você pode oferecer.</li>
+          <li>Você não tem a reserva para o lance livre e o grupo não aceita embutido suficiente.</li>
+          <li>Nesses casos, prefira o menor prazo que caiba no orçamento: 24× a 1,49% a.m. custa cerca de R$ 7 mil a menos que 48×.</li>
+        </ul>
+        <h3>Cuidados</h3>
+        <ul class="clean note">
+          <li>Ninguém garante contemplação. "Carta garantida" é golpe.</li>
+          <li>Carta contemplada: feche a transferência pela administradora; desconfie de ágio abaixo de 5%.</li>
+          <li>Confira se a administradora é autorizada pelo Banco Central.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-prem">
+    <div class="sec-head"><span class="eyebrow">Premissas e fontes</span><h2 id="h-prem">Como a conta é feita</h2></div>
+    <div class="prose note" style="display:grid;gap:10px">
+      <p>Tudo em valor presente, descontado pelo rendimento de um CDB a 100% do CDI líquido de IR de 15% (o custo de oportunidade de cada real, inclusive o do lance). O carro chega no mês 1 em todos os caminhos; o horizonte é o maior prazo entre consórcio e financiamento, e a revenda do carro nesse mês abate o custo igualmente.</p>
+      <p>Financiamento: tabela Price com IOF de pessoa física (0,0082% ao dia, limitado a 365 dias, mais 0,38%) e tarifas financiadas. Consórcio: parcela = carta × (1 + taxa de administração + fundo de reserva) ÷ prazo, reajustada a cada 12 meses; o lance abate o saldo e reduz as parcelas seguintes; lance embutido exige carta maior. Desistência: devolução das parcelas pagas (parte do fundo comum) no fim do grupo, menos a multa.</p>
+      <p>Mercado em novembro de 2026: Selic 13,75%, Focus de 12,75% no fim de 2027; financiamento de veículos com mediana de 1,49% a.m. nos bancos de montadora e 1,73% a.m. no mercado (outubro); média do BC em 26,4% a.a. Taxas de administração "a partir de" divulgadas por comparativos de terceiros. Estudo educativo, não é recomendação de investimento.</p>
+    </div>
+    <ul class="sources">
+      <li><a href="https://www.folhape.com.br/economia/banco-central-surpreende-e-mantem-juros-basicos-em-1375-ao-ano/522444/" target="_blank" rel="noopener">Folha PE: BC mantém Selic em 13,75%</a></li>
+      <li><a href="https://garagem360.com.br/?p=322210" target="_blank" rel="noopener">Garagem360: taxas de financiamento de veículos em outubro</a></li>
+      <li><a href="https://cidesp.com.br/conteudo/tabela-de-taxa-de-administracao-de-consorcio-atualizada" target="_blank" rel="noopener">CIDESP: taxas de administração de consórcio</a></li>
+      <li><a href="https://www.consorciocred.com/o-que-ninguem-te-conta-sobre-o-lance-embutido-do-itau/" target="_blank" rel="noopener">ConsorcioCred: lance embutido do Itaú</a></li>
+      <li><a href="https://napista.com.br/radar/carta-contemplada-vale-a-pena" target="_blank" rel="noopener">NaPista: carta contemplada vale a pena?</a></li>
+      <li><a href="https://napista.com.br/radar/como-funciona-carta-contemplada/" target="_blank" rel="noopener">NaPista: como comprar carta contemplada com segurança</a></li>
+      <li><a href="https://www.em.com.br/mundo-corporativo/2026/08/7474947-o-que-e-a-carta-contemplada-e-como-ela-funciona.html" target="_blank" rel="noopener">Estado de Minas: o que é carta contemplada</a></li>
+    </ul>
+  </section>
+</div>
+
+<script>
+/*
+ * Motor de cálculo: financiamento (CDC, tabela Price) × consórcio × poupar e comprar à vista.
+ *
+ * Métrica principal: CUSTO ECONÔMICO EM VALOR PRESENTE (VP), em R$ de hoje, no horizonte T:
+ *   VP(desembolsos)                         entrada, parcelas, lances, tarifas
+ * + VP(custo de mobilidade sem carro)       meses em que ainda não há carro
+ * − VP(valor de revenda do carro em T)      carro comprado mais tarde vale mais em T
+ * Desconto pela taxa líquida de um CDB 100% do CDI (custo de oportunidade).
+ * Menor VP = melhor. Todas as estratégias usam o mesmo horizonte T.
+ */
+(function (root) {
+  'use strict';
+
+  const mFromA = (a) => Math.pow(1 + a, 1 / 12) - 1; // taxa anual -> mensal
+  const aFromM = (m) => Math.pow(1 + m, 12) - 1; // taxa mensal -> anual
+
+  function defaults() {
+    return {
+      preco: 100000, // preço do carro hoje (R$)
+      ipca: 0.045, // reajuste anual do preço do carro / da carta (a.a.)
+      cdi: 0.12, // CDI médio no horizonte (a.a.)
+      ir: 0.15, // IR sobre renda fixa > 720 dias
+      deprec: 0.1, // depreciação anual frente ao carro 0 km
+      mobilidade: 1000, // custo líquido mensal de ficar sem carro (R$ de hoje)
+      // financiamento
+      entradaPct: 0.2,
+      taxaFinM: 0.0173, // a.m.
+      prazoFin: 48,
+      tarifas: 1300, // cadastro + registro de contrato (gravame)
+      // consórcio
+      taxaAdm: 0.12, // sobre o crédito, no plano inteiro
+      fundoReserva: 0.02,
+      prazoCons: 80,
+      lanceLivrePct: 0, // % da carta pago com recursos próprios na contemplação
+      lanceEmbutidoPct: 0, // % da carta usado como lance embutido
+      devolveFR: 0, // fração do fundo de reserva devolvida no encerramento
+    };
+  }
+
+  // Taxa de desconto mensal líquida de IR
+  function taxaDesconto(p) {
+    return mFromA(p.cdi * (1 - p.ir));
+  }
+
+  // Índice de preço do carro/carta: reajuste anual em degraus (a cada 12 meses)
+  const indice = (p, mes) => Math.pow(1 + p.ipca, Math.floor(mes / 12));
+
+  // Valor de revenda em T de um carro comprado 0 km no mês tb
+  function revenda(p, tb, T) {
+    const novoEmT = p.preco * Math.pow(1 + p.ipca, T / 12);
+    return novoEmT * Math.pow(1 - p.deprec, (T - tb) / 12);
+  }
+
+  function vpMobilidade(p, ateMes, r) {
+    let s = 0;
+    for (let m = 1; m <= ateMes; m++) s += (p.mobilidade * indice(p, m - 1)) / Math.pow(1 + r, m);
+    return s;
+  }
+
+  /* ---------------- Financiamento (Price + IOF PF) ---------------- */
+  function financiamento(p) {
+    const i = p.taxaFinM;
+    const n = p.prazoFin;
+    const entrada = p.preco * p.entradaPct;
+    const base = p.preco - entrada + p.tarifas;
+    // IOF PF: 0,0082% a.d. sobre cada amortização (limitado a 365 dias) + 0,38% fixo, financiado.
+    let principal = base;
+    let iof = 0;
+    for (let it = 0; it < 30; it++) {
+      const pmt = (principal * i) / (1 - Math.pow(1 + i, -n));
+      let saldo = principal;
+      let iofDiario = 0;
+      for (let j = 1; j <= n; j++) {
+        const juros = saldo * i;
+        const amort = pmt - juros;
+        iofDiario += amort * 0.000082 * Math.min(30 * j, 365);
+        saldo -= amort;
+      }
+      iof = iofDiario + principal * 0.0038;
+      principal = base + iof;
+    }
+    const pmt = (principal * i) / (1 - Math.pow(1 + i, -n));
+    // CET mensal: taxa que iguala (preço − entrada) às parcelas
+    const cetM = irr([-(p.preco - entrada), ...Array(n).fill(pmt)].map((v) => -v));
+    return { entrada, principal, iof, pmt, n, totalPago: entrada + pmt * n, cetM, cetA: aFromM(cetM) };
+  }
+
+  /* ---------------- Consórcio ----------------
+   * Parcela = carta × (1 + taxa adm + fundo de reserva) / prazo, reajustada anualmente com a carta.
+   * Lance (livre e/ou embutido) na contemplação abate o saldo e reduz as parcelas restantes.
+   * Lance embutido: a carta contratada é maior (carta = preço / (1 − %embutido)), para que o crédito
+   * líquido compre o carro.
+   */
+  function consorcio(p, k) {
+    const n = p.prazoCons;
+    const carta0 = p.preco / (1 - p.lanceEmbutidoPct);
+    const fator = 1 + p.taxaAdm + p.fundoReserva;
+    const fluxos = []; // fluxo do consorciado por mês (negativo = paga)
+    let pctPago = 0; // fração do "valor total do plano" já quitada
+    let fatorParcela = 1; // após lance, as parcelas restantes são reduzidas
+    let lanceLivre = 0;
+    for (let m = 1; m <= n; m++) {
+      const carta = carta0 * indice(p, m - 1);
+      const parcela = (carta * fator * fatorParcela) / n;
+      let f = -parcela;
+      pctPago += fatorParcela / n;
+      if (m === k) {
+        const creditoLiquido = carta * (1 - p.lanceEmbutidoPct);
+        f += creditoLiquido; // carta usada na compra (ida e volta: carro adquirido)
+        // lances, expressos em % da carta; abatem o saldo devedor (em % do plano)
+        const lancePctPlano = (p.lanceLivrePct + p.lanceEmbutidoPct) / fator;
+        lanceLivre = carta * p.lanceLivrePct;
+        f -= lanceLivre;
+        const restante = 1 - pctPago;
+        const restanteApos = Math.max(0, restante - lancePctPlano);
+        fatorParcela = restante > 0 ? (fatorParcela * restanteApos) / restante : 0;
+      }
+      fluxos.push(f);
+    }
+    // devolução do fundo de reserva não utilizado no fim do grupo
+    const frPago = carta0 * p.fundoReserva * indice(p, n - 1);
+    fluxos[n - 1] += frPago * p.devolveFR;
+    return { fluxos, carta0, lanceLivre };
+  }
+
+  /* ---------------- VP das estratégias ---------------- */
+  function horizonte(p) {
+    return Math.max(p.prazoCons, p.prazoFin);
+  }
+
+  function vpFinanciamento(p) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const f = financiamento(p);
+    let vp = f.entrada;
+    for (let j = 1; j <= f.n; j++) vp += f.pmt / Math.pow(1 + r, j);
+    const vpRev = revenda(p, 0, T) / Math.pow(1 + r, T);
+    return { vp: vp - vpRev, desembolso: vp, revenda: vpRev, mobilidade: 0, det: f };
+  }
+
+  function vpConsorcio(p, k) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const c = consorcio(p, k);
+    // desembolsos líquidos: parcelas + lance − carta, mais a compra do carro pelo preço do mês k
+    let vp = 0;
+    c.fluxos.forEach((f, idx) => (vp += -f / Math.pow(1 + r, idx + 1)));
+    const precoK = p.preco * indice(p, k - 1); // carta reajustada = preço do carro no mês
+    vp += precoK / Math.pow(1 + r, k);
+    const mob = vpMobilidade(p, k - 1, r) + (p.mobilidade * indice(p, k - 1) * 0.5) / Math.pow(1 + r, k); // meio mês até retirar o carro
+    const vpRev = revenda(p, k, T) / Math.pow(1 + r, T);
+    // taxa implícita do consórcio (fluxo financeiro puro, sem carro/mobilidade)
+    let tx = null;
+    try {
+      tx = irr(c.fluxos.map((v) => -v));
+    } catch (e) {
+      tx = null;
+    }
+    return { vp: vp + mob - vpRev, desembolso: vp, revenda: vpRev, mobilidade: mob, taxaImplicitaM: tx, det: c };
+  }
+
+  // Poupar a parcela do financiamento (mais a entrada) em CDB e comprar à vista quando der
+  function vpPoupar(p) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const f = financiamento(p);
+    let saldo = f.entrada;
+    let tb = null;
+    for (let m = 1; m <= 600; m++) {
+      saldo = saldo * (1 + r) + f.pmt;
+      if (saldo >= p.preco * indice(p, m)) {
+        tb = m;
+        break;
+      }
+    }
+    if (tb === null) return null;
+    const vpCompra = (p.preco * indice(p, tb)) / Math.pow(1 + r, tb);
+    const mob = vpMobilidade(p, tb, r);
+    const tbEf = Math.min(tb, T);
+    const vpRev = revenda(p, tbEf, T) / Math.pow(1 + r, T);
+    return { vp: vpCompra + mob - vpRev, desembolso: vpCompra, revenda: vpRev, mobilidade: mob, mes: tb };
+  }
+
+  function vpAVista(p) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const vpRev = revenda(p, 0, T) / Math.pow(1 + r, T);
+    return { vp: p.preco - vpRev, desembolso: p.preco, revenda: vpRev, mobilidade: 0 };
+  }
+
+  // Custo esperado com contemplação por sorteio (distribuição uniforme entre os meses 1..n)
+  function vpConsorcioEsperado(p) {
+    let s = 0;
+    for (let k = 1; k <= p.prazoCons; k++) s += vpConsorcio(p, k).vp;
+    return s / p.prazoCons;
+  }
+
+  // Último mês de contemplação em que o consórcio ainda empata ou vence o financiamento
+  function breakEven(p) {
+    const fin = vpFinanciamento(p).vp;
+    let ultimo = 0;
+    for (let k = 1; k <= p.prazoCons; k++) if (vpConsorcio(p, k).vp <= fin) ultimo = k;
+    return ultimo;
+  }
+
+  // TIR mensal por bisseção, fluxos na convenção "positivo = recebe"
+  function irr(cf) {
+    const npv = (r) => cf.reduce((s, v, t) => s + v / Math.pow(1 + r, t), 0);
+    let lo = -0.05;
+    let hi = 0.2;
+    let flo = npv(lo);
+    let fhi = npv(hi);
+    if (flo * fhi > 0) throw new Error('sem TIR');
+    for (let it = 0; it < 200; it++) {
+      const mid = (lo + hi) / 2;
+      const fm = npv(mid);
+      if (flo * fm <= 0) {
+        hi = mid;
+        fhi = fm;
+      } else {
+        lo = mid;
+        flo = fm;
+      }
+    }
+    return (lo + hi) / 2;
+  }
+
+  const api = {
+    defaults,
+    mFromA,
+    aFromM,
+    taxaDesconto,
+    financiamento,
+    consorcio,
+    vpFinanciamento,
+    vpConsorcio,
+    vpConsorcioEsperado,
+    vpPoupar,
+    vpAVista,
+    breakEven,
+    irr,
+    horizonte,
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.Motor = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const M = window.Motor;
+  const ADMS = [
+    { nome: 'Rodobens', taxaAdm: 0.10, fundoReserva: 0.02, prazoCons: 80 },
+    { nome: 'Itaú', taxaAdm: 0.12, fundoReserva: 0.02, prazoCons: 80 },
+    { nome: 'Porto', taxaAdm: 0.136, fundoReserva: 0.02, prazoCons: 80 },
+  ];
+  const $ = (id) => document.getElementById(id);
+  const num = (id) => { const v = parseFloat($(id).value); return isFinite(v) ? v : 0; };
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const brl = (v) => (v < 0 ? '−' : '') + 'R$ ' + Math.round(Math.abs(v)).toLocaleString('pt-BR');
+  const mil = (v) => (v / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const pct = (v, d = 1) => (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+  const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text !== undefined) e.textContent = text; return e; };
+  const svgEl = (tag, attrs = {}) => { const e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+  function params() {
+    return {
+      ...M.defaults(),
+      mobilidade: 0,
+      preco: Math.max(1000, num('f-preco')), cdi: num('f-cdi') / 100, ipca: num('f-ipca') / 100,
+      taxaFinM: Math.max(0.0001, num('f-tx') / 100), prazoFin: parseInt($('f-pf').value, 10),
+      entradaPct: Math.min(0.9, Math.max(0, num('f-ent') / 100)), tarifas: Math.max(0, num('f-tar')),
+      taxaAdm: Math.max(0, num('f-ta') / 100), fundoReserva: Math.max(0, num('f-fr') / 100),
+      prazoCons: Math.round(Math.min(200, Math.max(12, num('f-pc')))),
+      lanceLivrePct: Math.min(0.8, Math.max(0, num('f-ll') / 100)), lanceEmbutidoPct: Math.min(0.3, Math.max(0, num('f-le') / 100)),
+    };
+  }
+
+  // Perda de desistir: parcelas pagas menos a devolução (parte do fundo comum, com multa) no fim do grupo
+  function perdaDesistencia(p, nPagas, multa) {
+    const r = M.taxaDesconto(p);
+    const carta0 = p.preco / (1 - p.lanceEmbutidoPct);
+    const parc = (carta0 * (1 + p.taxaAdm + p.fundoReserva)) / p.prazoCons;
+    let pago = 0;
+    for (let m = 1; m <= nPagas; m++) pago += parc / Math.pow(1 + r, m);
+    const idxFim = Math.pow(1 + p.ipca, Math.floor((p.prazoCons - 1) / 12));
+    const devolucao = (nPagas * carta0 / p.prazoCons) * (1 - multa) * idxFim / Math.pow(1 + r, p.prazoCons);
+    return pago - devolucao;
+  }
+
+  // Taxa de financiamento que empata com um custo-alvo
+  function taxaEmpate(p, alvo) {
+    let lo = 0.00001, hi = 0.06;
+    if (M.vpFinanciamento({ ...p, taxaFinM: lo }).vp >= alvo) return 0;
+    for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (M.vpFinanciamento({ ...p, taxaFinM: mid }).vp < alvo) lo = mid; else hi = mid; }
+    return lo;
+  }
+
+  function render() {
+    const p = params();
+    const prob = num('f-p') / 100;
+    $('f-p-out').textContent = Math.round(prob * 100) + '%';
+    const fin = M.vpFinanciamento(p);
+    const cons = M.vpConsorcio(p, 1);
+    const perda = perdaDesistencia(p, Math.round(num('f-np')), num('f-multa') / 100);
+    const ganho = fin.vp - cons.vp;
+    const esperado = prob * cons.vp + (1 - prob) * (fin.vp + perda);
+    const pMin = ganho > 0 ? perda / (ganho + perda) : 1;
+    const empate = taxaEmpate(p, cons.vp);
+    const fator = 1 + p.taxaAdm + p.fundoReserva;
+    const parc0 = (cons.det.carta0 * fator) / p.prazoCons;
+    const rest = 1 - 1 / p.prazoCons;
+    const parcApos = (parc0 * Math.max(0, rest - (p.lanceLivrePct + p.lanceEmbutidoPct) / fator)) / rest;
+
+    const pill = $('d-pill'), msg = $('d-msg');
+    const vale = ganho > 0 && prob >= pMin;
+    pill.className = 'pill ' + (vale ? 'go' : 'stop');
+    pill.textContent = vale ? 'Vale tentar o consórcio' : 'Financie direto';
+    msg.textContent = ganho <= 0
+      ? 'Com essa taxa, financiar já é mais barato que o consórcio contemplado. Não há o que ganhar tentando.'
+      : vale
+        ? 'Com ' + Math.round(prob * 100) + '% de chance, tentar o lance economiza ' + brl(fin.vp - esperado) + ' em média. Compensa a partir de ' + pct(pMin, 0) + ' de chance.'
+        : 'Com ' + Math.round(prob * 100) + '% de chance, tentar custa ' + brl(esperado - fin.vp) + ' a mais em média. Só compensa a partir de ' + pct(pMin, 0) + ' de chance.';
+
+    const k = $('kpis'); k.textContent = '';
+    const kpi = (l, v, s) => { const d = el('div'); d.appendChild(el('span', { class: 'k-l' }, l)); d.appendChild(el('span', { class: 'k-v' }, v)); if (s) d.appendChild(el('span', { class: 'k-s' }, s)); k.appendChild(d); };
+    kpi('Financiar direto', brl(fin.vp), fin.det.n + '× de ' + brl(fin.det.pmt) + ' · CET ' + pct(fin.det.cetA) + ' a.a.');
+    kpi('Consórcio, se contemplado', brl(cons.vp), 'lance do bolso ' + brl(cons.det.lanceLivre) + ' · depois ' + brl(parcApos) + '/mês');
+    kpi('Tentar, custo esperado', brl(esperado), 'com ' + Math.round(prob * 100) + '% de chance de vencer');
+    kpi('Ganho se vencer', brl(ganho), 'contra financiar direto');
+    kpi('Perda se não vencer', brl(perda), 'desistência da cota');
+    kpi('Taxa de empate', pct(empate, 2) + ' a.m.', 'financiamento abaixo disso vence');
+
+    drawProb(fin.vp, cons.vp, perda, prob, pMin);
+    drawTable(p);
+    renderCarta(p, fin);
+  }
+
+  function drawProb(vFin, vCons, perda, prob, pMin) {
+    const host = $('plot-p'); host.textContent = '';
+    const W = 640, H = 270, ml = 54, mr = 16, mt = 12, mb = 36;
+    const yA = vFin + perda, yB = vCons;
+    let lo = Math.min(yA, yB, vFin), hi = Math.max(yA, yB, vFin);
+    const span = Math.max(1000, hi - lo); const step = niceStep(span / 4);
+    lo = Math.floor((lo - span * 0.05) / step) * step; hi = Math.ceil((hi + span * 0.05) / step) * step;
+    const x = (q) => ml + q * (W - ml - mr);
+    const y = (v) => mt + (1 - (v - lo) / (hi - lo)) * (H - mt - mb);
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Custo esperado por chance de contemplação' });
+    for (let v = lo; v <= hi + 1e-6; v += step) {
+      svg.appendChild(svgEl('line', { x1: ml, x2: W - mr, y1: y(v), y2: y(v), stroke: css('--rule'), 'stroke-width': 1 }));
+      const t = svgEl('text', { x: ml - 8, y: y(v) + 4, 'text-anchor': 'end' }); t.textContent = Math.round(v / 1000) + ' mil'; svg.appendChild(t);
+    }
+    [0, 0.25, 0.5, 0.75, 1].forEach((q) => { const t = svgEl('text', { x: x(q), y: H - mb + 18, 'text-anchor': 'middle' }); t.textContent = Math.round(q * 100) + '%'; svg.appendChild(t); });
+    const xl = svgEl('text', { x: (ml + W - mr) / 2, y: H - 3, 'text-anchor': 'middle' }); xl.textContent = 'chance de o lance vencer'; svg.appendChild(xl);
+    // área de vantagem do consórcio
+    if (pMin < 1) svg.appendChild(svgEl('rect', { x: x(pMin), y: mt, width: x(1) - x(pMin), height: H - mt - mb, fill: css('--band') }));
+    svg.appendChild(svgEl('line', { x1: x(0), x2: x(1), y1: y(vFin), y2: y(vFin), stroke: css('--fin'), 'stroke-width': 2 }));
+    svg.appendChild(svgEl('line', { x1: x(0), x2: x(1), y1: y(yA), y2: y(yB), stroke: css('--try'), 'stroke-width': 2, 'stroke-linecap': 'round' }));
+    if (pMin > 0 && pMin < 1) {
+      svg.appendChild(svgEl('circle', { cx: x(pMin), cy: y(vFin), r: 4, fill: css('--ink'), stroke: css('--surface'), 'stroke-width': 2 }));
+      const t = svgEl('text', { x: x(pMin) + 8, y: y(vFin) - 10, class: 'lbl' }); t.textContent = 'empate em ' + Math.round(pMin * 100) + '%'; svg.appendChild(t);
+    }
+    const cy = y(prob * yB + (1 - prob) * yA);
+    svg.appendChild(svgEl('line', { x1: x(prob), x2: x(prob), y1: mt, y2: H - mb, stroke: css('--rule-strong'), 'stroke-width': 1 }));
+    svg.appendChild(svgEl('circle', { cx: x(prob), cy, r: 5, fill: css('--try'), stroke: css('--surface'), 'stroke-width': 2 }));
+    const tv = svgEl('text', { x: prob > 0.7 ? x(prob) - 8 : x(prob) + 8, y: cy - 12 < mt + 10 ? cy + 20 : cy - 12, class: 'val', 'text-anchor': prob > 0.7 ? 'end' : 'start' });
+    tv.textContent = 'sua estimativa: ' + mil(prob * yB + (1 - prob) * yA) + ' mil'; svg.appendChild(tv);
+    // hover
+    const hit = svgEl('rect', { x: ml, y: mt, width: W - ml - mr, height: H - mt - mb, fill: 'transparent' });
+    svg.appendChild(hit);
+    host.appendChild(svg);
+    const tip = el('div', { class: 'tip', hidden: '' }); host.appendChild(tip);
+    hit.addEventListener('pointermove', (ev) => {
+      const r = svg.getBoundingClientRect();
+      const q = Math.min(1, Math.max(0, Math.round((((ev.clientX - r.left) / r.width) * W - ml) / (W - ml - mr) * 20) / 20));
+      tip.textContent = '';
+      tip.appendChild(el('div', { class: 't-h' }, 'Chance de vencer: ' + Math.round(q * 100) + '%'));
+      const row = (a, b) => { const d = el('div', { class: 't-r' }); d.appendChild(el('span', {}, a)); d.appendChild(el('b', {}, b)); tip.appendChild(d); };
+      row('Tentar consórcio', brl(q * yB + (1 - q) * yA));
+      row('Financiar direto', brl(vFin));
+      tip.hidden = false;
+      const bw = host.getBoundingClientRect().width, px = (x(q) / W) * bw;
+      tip.style.left = Math.max(0, Math.min(bw - tip.offsetWidth, px > bw / 2 ? px - tip.offsetWidth - 12 : px + 12)) + 'px';
+      tip.style.top = '6px';
+    });
+    hit.addEventListener('pointerleave', () => { tip.hidden = true; });
+    $('plot-p-cap').textContent = pMin < 1
+      ? 'A linha verde cai de "financiar e ainda perder a parcela" (0%) até "consórcio contemplado" (100%). À direita de ' + Math.round(pMin * 100) + '% (faixa sombreada), tentar é mais barato em média.'
+      : 'Com esses números o consórcio contemplado não fica abaixo do financiamento; tentar não compensa em nenhuma chance.';
+  }
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))); const f = raw / p; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p; }
+
+  function drawTable(pBase) {
+    const t = $('tbl-lances'); t.textContent = '';
+    const combos = [[0.2, 0, 'Livre 20% (a entrada)'], [0, 0.3, 'Embutido 30%'], [0.35, 0, 'Livre 35%'], [0.2, 0.25, 'Livre 20% + embutido 25%'], [0.2, 0.3, 'Livre 20% + embutido 30%']];
+    const th = el('thead'); const hr = el('tr');
+    ['Administradora', 'Lance', 'Do bolso', 'Parcela depois', 'Custo se contemplado', 'Economia vs. financiar', 'Taxa de empate'].forEach((h, i) => hr.appendChild(el('th', { class: i > 1 ? 'n' : '' }, h)));
+    th.appendChild(hr); t.appendChild(th);
+    const tb = el('tbody');
+    ADMS.forEach((a) => combos.forEach(([l, e, lab]) => {
+      const p = { ...pBase, ...a, lanceLivrePct: l, lanceEmbutidoPct: e };
+      const fin = M.vpFinanciamento(p).vp;
+      const c = M.vpConsorcio(p, 1);
+      const fator = 1 + p.taxaAdm + p.fundoReserva;
+      const parc0 = (c.det.carta0 * fator) / p.prazoCons, rest = 1 - 1 / p.prazoCons;
+      const apos = (parc0 * Math.max(0, rest - (l + e) / fator)) / rest;
+      const tr = el('tr');
+      tr.appendChild(el('td', {}, a.nome));
+      tr.appendChild(el('td', {}, lab));
+      [brl(c.det.lanceLivre), brl(apos), brl(c.vp)].forEach((v) => tr.appendChild(el('td', { class: 'n' }, v)));
+      tr.appendChild(el('td', { class: 'n ' + (fin - c.vp > 0 ? 'win' : 'lose-t') }, brl(fin - c.vp)));
+      tr.appendChild(el('td', { class: 'n' }, pct(taxaEmpate(p, c.vp), 2) + ' a.m.'));
+      tb.appendChild(tr);
+    }));
+    t.appendChild(tb);
+    t.appendChild(el('caption', {}, 'Financiamento de referência: ' + pct(pBase.taxaFinM, 2) + ' a.m., ' + pBase.prazoFin + '×, entrada de ' + pct(pBase.entradaPct, 0) + ' (' + brl(M.vpFinanciamento(pBase).vp) + ' em valor presente). Prazo do consórcio de 80 meses e fundo de reserva de 2%.'));
+  }
+
+  function renderCarta(p, fin) {
+    const r = M.taxaDesconto(p);
+    const valor = Math.max(0, num('c-valor')), rest = Math.max(1, Math.round(num('c-rest'))), parc = Math.max(0, num('c-parc'));
+    const pago = Math.max(0, num('c-pago')), agio = Math.max(0, num('c-agio')) / 100;
+    const T = Math.max(rest, p.prazoFin);
+    let vpParc = 0;
+    for (let m = 1; m <= rest; m++) vpParc += (parc * Math.pow(1 + p.ipca, Math.floor((m - 1) / 12))) / Math.pow(1 + r, m);
+    const aoVendedor = pago * (1 + agio);
+    const complemento = Math.max(0, p.preco - valor);
+    const revenda = (p.preco * Math.pow(1 + p.ipca, T / 12) * Math.pow(1 - p.deprec, T / 12)) / Math.pow(1 + r, T);
+    const revFin = (p.preco * Math.pow(1 + p.ipca, T / 12) * Math.pow(1 - p.deprec, T / 12)) / Math.pow(1 + r, T);
+    // financiamento no mesmo horizonte da carta
+    let vpFin = fin.det.entrada;
+    for (let j = 1; j <= fin.det.n; j++) vpFin += fin.det.pmt / Math.pow(1 + r, j);
+    vpFin -= revFin;
+    const vpCarta = aoVendedor + complemento + vpParc - revenda;
+    const maxVendedor = vpFin - (complemento + vpParc - revenda);
+    const agioMax = pago > 0 ? maxVendedor / pago - 1 : null;
+    const ok = vpCarta < vpFin;
+    $('c-pill').className = 'pill ' + (ok ? 'go' : 'stop');
+    $('c-pill').textContent = ok ? 'Carta mais barata' : 'Financiamento mais barato';
+    $('c-msg').textContent = (ok ? 'Pagando ' + brl(aoVendedor) + ' ao vendedor, a carta sai ' + brl(vpFin - vpCarta) + ' mais barata que financiar.' : 'Pagando ' + brl(aoVendedor) + ' ao vendedor, a carta sai ' + brl(vpCarta - vpFin) + ' mais cara que financiar.') +
+      ' O máximo que vale pagar ao vendedor é ' + brl(maxVendedor) + (agioMax !== null ? ' (ágio de ' + pct(agioMax, 0) + ' sobre o que ele pagou).' : '.');
+    const k = $('c-kpis'); k.textContent = '';
+    const kpi = (l, v, s) => { const d = el('div'); d.appendChild(el('span', { class: 'k-l' }, l)); d.appendChild(el('span', { class: 'k-v' }, v)); if (s) d.appendChild(el('span', { class: 'k-s' }, s)); k.appendChild(d); };
+    kpi('Carta contemplada', brl(vpCarta), 'custo em valor presente');
+    kpi('Financiar direto', brl(vpFin), 'mesmo horizonte');
+    kpi('Pagamento máximo', brl(maxVendedor), agioMax !== null ? 'ágio máximo ' + pct(agioMax, 0) : '');
+  }
+
+  $('f-adm').addEventListener('change', () => {
+    const v = $('f-adm').value;
+    if (v !== 'x') { const a = ADMS[+v]; $('f-ta').value = +(a.taxaAdm * 100).toFixed(1); $('f-fr').value = a.fundoReserva * 100; $('f-pc').value = a.prazoCons; }
+    render();
+  });
+  ['f-ta', 'f-fr', 'f-pc'].forEach((id) => $(id).addEventListener('input', () => { $('f-adm').value = 'x'; }));
+  $('form').addEventListener('input', render);
+  $('form-carta').addEventListener('input', render);
+  ['form', 'form-carta'].forEach((id) => $(id).addEventListener('submit', (e) => e.preventDefault()));
+  render();
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  if (mq.addEventListener) mq.addEventListener('change', render);
+})();
+</script>
+</body>
+</html>
