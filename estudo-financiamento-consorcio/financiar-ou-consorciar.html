@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Financiar ou Consorciar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: relatório em coluna única (~68ch para texto), blocos de dados mais largos; o "carnê" de 80 parcelas abre a página. */
+:root {
+  --bg: #f4f5f2;
+  --surface: #fcfcfb;
+  --ink: #11171a;
+  --ink-2: #4b5457;
+  --muted: #7d8587;
+  --rule: #dde1dc;
+  --rule-strong: #c3c8c2;
+  --tint: #e9ece7;
+  --s1: #2a78d6; /* Rodobens */
+  --s2: #eb6834; /* Itaú */
+  --s3: #1baf7a; /* Porto */
+  --win: #2a78d6;
+  --lose: #d03b3b;
+  --mid: #eceeea;
+  --band: rgba(17, 23, 26, 0.07);
+  --good-ink: #006300;
+  --bad-ink: #b3261e;
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111313; --surface: #191b1a; --ink: #eef0ec; --ink-2: #b8beba; --muted: #868d8a;
+    --rule: #2b2f2d; --rule-strong: #3d423f; --tint: #222624;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --win: #3987e5; --lose: #e66767; --mid: #2e322f;
+    --band: rgba(238, 240, 236, 0.08); --good-ink: #3fc25a; --bad-ink: #f08a84;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111313; --surface: #191b1a; --ink: #eef0ec; --ink-2: #b8beba; --muted: #868d8a;
+  --rule: #2b2f2d; --rule-strong: #3d423f; --tint: #222624;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --win: #3987e5; --lose: #e66767; --mid: #2e322f;
+  --band: rgba(238, 240, 236, 0.08); --good-ink: #3fc25a; --bad-ink: #f08a84;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 56px; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.12; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800; }
+h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; }
+h3 { font-size: 1.1rem; font-weight: 700; }
+p { margin: 0; }
+a { color: inherit; text-decoration-color: var(--muted); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--ink); }
+:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; border-radius: 4px; }
+.eyebrow { font-family: var(--f-data); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.num, td.n, th.n { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+section { display: grid; gap: 20px; }
+.sec-head { display: grid; gap: 8px; border-top: 1px solid var(--rule-strong); padding-top: 20px; }
+.sec-head .eyebrow { color: var(--muted); }
+.note { font-size: 0.875rem; color: var(--ink-2); }
+
+/* Hero */
+header.hero { display: grid; gap: 20px; padding-top: 48px; }
+.lede { font-size: 1.15rem; color: var(--ink-2); max-width: 62ch; }
+.carne { display: grid; gap: 10px; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; }
+.carne-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; align-items: baseline; }
+.carne-grid { display: grid; grid-template-columns: repeat(40, minmax(0, 1fr)); gap: 3px; }
+.carne-grid span { aspect-ratio: 1 / 1.35; border-radius: 2px; background: var(--win); max-width: 100%; }
+.carne-grid span.lose { background: var(--lose); }
+.carne-grid span.mark { outline: 2px solid var(--ink); outline-offset: 1px; }
+.carne-legend { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.8125rem; color: var(--ink-2); }
+.key { display: inline-flex; align-items: center; gap: 6px; }
+.key i { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+@media (max-width: 560px) { .carne-grid { grid-template-columns: repeat(20, minmax(0, 1fr)); } }
+
+/* Veredito */
+.verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+.verdict > div { background: var(--surface); padding: 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.verdict .big { font-family: var(--f-display); font-weight: 800; font-size: 1.7rem; line-height: 1.1; }
+.verdict p { font-size: 0.9rem; color: var(--ink-2); }
+
+/* Tabelas */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th { font-weight: 600; color: var(--ink-2); font-size: 0.8125rem; background: var(--tint); white-space: nowrap; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+.win { color: var(--good-ink); font-weight: 600; }
+.lose-t { color: var(--bad-ink); }
+.sw { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 8px; }
+
+/* Cards das administradoras */
+.adms { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.adm { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.adm-head { display: flex; align-items: center; gap: 10px; }
+.adm-head i { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.adm dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 0.875rem; }
+.adm dt { color: var(--ink-2); }
+.adm dd { margin: 0; text-align: right; font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.adm p { font-size: 0.875rem; color: var(--ink-2); }
+
+/* Gráficos */
+.chart-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--rule-strong); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 0.8125rem; padding: 6px 12px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule-strong); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.seg button:hover:not([aria-pressed="true"]) { background: var(--tint); }
+.ctl-label { font-size: 0.8125rem; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.8125rem; color: var(--ink-2); }
+.legend .ln { display: inline-block; width: 18px; height: 2px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.legend .bd { display: inline-block; width: 18px; height: 10px; vertical-align: middle; margin-right: 6px; background: var(--band); border-top: 1px solid var(--ink-2); }
+.plot { position: relative; }
+.plot svg { display: block; width: 100%; height: auto; overflow: visible; }
+.plot text { font-family: var(--f-data); font-size: 11px; fill: var(--muted); }
+.plot text.lbl { fill: var(--ink-2); font-family: var(--f-body); font-size: 11.5px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 8px 10px; font-size: 0.8125rem; box-shadow: 0 6px 20px rgba(0,0,0,0.12); min-width: 190px; display: grid; gap: 3px; }
+.tip .t-h { color: var(--muted); font-size: 0.75rem; }
+.tip .t-r { display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+.tip .t-r b { font-family: var(--f-data); font-weight: 500; font-variant-numeric: tabular-nums; }
+.tip .t-r span { color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+.tip .t-r span i { width: 12px; height: 2px; border-radius: 2px; display: inline-block; }
+
+/* Mapa de calor */
+.heat { border-collapse: separate; border-spacing: 2px; width: 100%; font-size: 0.8125rem; }
+.heat th, .heat td { border: 0; padding: 7px 6px; text-align: center; }
+.heat thead th { background: transparent; color: var(--ink-2); font-weight: 600; }
+.heat tbody th { text-align: right; color: var(--ink-2); font-weight: 600; white-space: nowrap; font-family: var(--f-data); }
+.heat td { border-radius: 4px; font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+
+/* Simulador */
+.sim { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 820px) { .sim { grid-template-columns: minmax(0, 1fr); } }
+.form { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 18px; display: grid; gap: 18px; }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; }
+legend { font-family: var(--f-display); font-weight: 700; font-size: 0.95rem; padding: 0; margin-bottom: 2px; }
+.field { display: grid; grid-template-columns: 1fr 110px; gap: 10px; align-items: center; font-size: 0.875rem; }
+.field label { color: var(--ink-2); }
+.field input, .field select { font: inherit; font-family: var(--f-data); font-size: 0.875rem; width: 100%; padding: 6px 8px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--bg); color: var(--ink); text-align: right; }
+.field select { text-align: left; }
+.field.wide { grid-template-columns: 1fr; }
+.out { display: grid; gap: 16px; min-width: 0; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+@media (max-width: 560px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.kpis > div { background: var(--surface); padding: 14px; display: grid; gap: 4px; min-width: 0; }
+.kpis .k-l { font-size: 0.75rem; color: var(--ink-2); }
+.kpis .k-v { font-family: var(--f-display); font-weight: 700; font-size: 1.3rem; }
+.kpis .k-s { font-size: 0.75rem; color: var(--muted); }
+.verdict-line { font-size: 1rem; background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--ink); border-radius: 6px; padding: 12px 14px; }
+
+/* Perfis */
+.perfis { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.perfil { border-top: 3px solid var(--ink); padding-top: 12px; display: grid; gap: 8px; align-content: start; }
+.perfil .tag { font-family: var(--f-data); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.perfil p { font-size: 0.9375rem; color: var(--ink-2); }
+ul.clean { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+ul.clean li { padding-left: 2px; }
+.sources { font-size: 0.8125rem; color: var(--ink-2); columns: 2 320px; column-gap: 32px; }
+.sources li { break-inside: avoid; margin-bottom: 6px; }
+@media (prefers-reduced-motion: no-preference) { .seg button, a { transition: background-color .15s, color .15s; } }
+</style>
+<style>body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">Estudo · dados de novembro de 2026 · carro 0 km de R$ 100 mil</span>
+    <h1>Financiar ou consorciar?</h1>
+    <p class="lede">O consórcio é o crédito mais barato do mercado, mas só para quem pode esperar. A conta muda de sinal conforme o mês em que você é contemplado e quanto custa ficar sem o carro até lá. Este estudo põe os dois caminhos no mesmo horizonte, em reais de hoje.</p>
+    <div class="carne" aria-label="Carnê de 80 parcelas: em quais meses de contemplação o consórcio vence o financiamento">
+      <div class="carne-top">
+        <h3>As 80 parcelas de um consórcio Itaú, mês a mês</h3>
+        <span class="note">Cada quadrado é um mês possível de contemplação. Comparado a financiar em 48× a 1,73% a.m., custo de mobilidade de R$ 1.000/mês.</span>
+      </div>
+      <div class="carne-grid" id="carne"></div>
+      <div class="carne-legend">
+        <span class="key"><i style="background:var(--win)"></i>Contemplado neste mês: consórcio sai mais barato</span>
+        <span class="key"><i style="background:var(--lose)"></i>Financiamento sai mais barato</span>
+        <span class="key" id="carne-be"></span>
+      </div>
+    </div>
+  </header>
+
+  <section aria-labelledby="h-veredito">
+    <div class="sec-head"><span class="eyebrow">Resposta curta</span><h2 id="h-veredito">O que os números dizem</h2></div>
+    <div class="verdict">
+      <div><span class="eyebrow">Custo do dinheiro</span><span class="big">≈ 8% a.a.</span><p>É quanto custa o consórcio contemplado no 1º mês (taxa de administração diluída + reajuste da carta). O financiamento tem CET de 22,7% a 30,0% a.a.</p></div>
+      <div><span class="eyebrow">Pode esperar</span><span class="big">Consórcio vence</span><p>Se ficar sem o carro novo custa pouco (já tem um carro, usa transporte público), o consórcio é mais barato em qualquer mês de contemplação, nas três administradoras.</p></div>
+      <div><span class="eyebrow">Precisa do carro já</span><span class="big">Até o 14º mês</span><p>Se a alternativa é alugar ou assinar um carro (≈ R$ 2.500/mês líquidos), o consórcio só compensa se a contemplação vier em até 14 a 15 meses. Isso exige lance.</p></div>
+      <div><span class="eyebrow">Ponto de virada</span><span class="big">R$ 1.250–1.330</span><p>É o custo mensal de ficar sem carro a partir do qual financiar passa a ganhar de um consórcio contemplado por sorteio, em mês aleatório.</p></div>
+    </div>
+    <p class="prose note">Valores em valor presente (VP), descontados pelo rendimento líquido de um CDB a 100% do CDI. A revenda do carro no fim do horizonte entra abatendo o custo. Premissas e método nas próximas seções; todos os parâmetros podem ser trocados no simulador.</p>
+  </section>
+
+  <section aria-labelledby="h-mercado">
+    <div class="sec-head"><span class="eyebrow">1 · Premissas</span><h2 id="h-mercado">O cenário de mercado em novembro de 2026</h2></div>
+    <p class="prose">O Copom manteve a Selic em 13,75% em 4 de novembro, interrompendo os cortes iniciados em março. O Focus de 16/11 projeta 12,75% no fim de 2027. Para um horizonte de quase sete anos, usamos CDI médio de 12% a.a. No crédito para veículos, a média do Banco Central gira em 26,4% a.a.; os bancos de montadora fecharam a primeira quinzena de outubro com mediana de 1,49% a.m.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Parâmetro</th><th class="n">Valor usado</th><th>Base</th></tr></thead>
+        <tbody>
+          <tr><td>Preço do carro 0 km</td><td class="n">R$ 100.000</td><td>Referência; tíquete médio de cotas de veículos leves foi R$ 74,7 mil em jun/26 (ABAC)</td></tr>
+          <tr><td>CDI médio no horizonte</td><td class="n">12,0% a.a.</td><td>Selic 13,75% hoje; Focus: 12,75% no fim de 2027</td></tr>
+          <tr><td>Rendimento líquido (desconto)</td><td class="n">10,2% a.a.</td><td>CDB 100% do CDI, IR de 15% (aplicações acima de 720 dias)</td></tr>
+          <tr><td>Reajuste do carro e da carta</td><td class="n">4,5% a.a.</td><td>IPCA Focus: 5,11% (2026) e 5,00% (2027); reajuste anual em degrau</td></tr>
+          <tr><td>Financiamento: banco de montadora</td><td class="n">1,49% a.m.</td><td>Mediana dos bancos de montadora, contratos de 5 a 9/out/26</td></tr>
+          <tr><td>Financiamento: mediana do mercado</td><td class="n">1,73% a.m.</td><td>Mediana dos 40 participantes, mesmo período</td></tr>
+          <tr><td>Financiamento: média do BC</td><td class="n">1,97% a.m.</td><td>Série 20749 do BC, ≈ 26,4% a.a. (jun–ago/26)</td></tr>
+          <tr><td>Entrada do financiamento</td><td class="n">20%</td><td>Usual em CDC de veículo</td></tr>
+          <tr><td>IOF pessoa física</td><td class="n">0,0082% a.d. + 0,38%</td><td>Diário limitado a 365 dias; financiado junto com o saldo</td></tr>
+          <tr><td>Tarifa de cadastro + registro do contrato</td><td class="n">R$ 1.300</td><td>Estimativa; varia por banco e estado</td></tr>
+          <tr><td>Depreciação frente ao 0 km</td><td class="n">10% a.a.</td><td>Estimativa conservadora de mercado (FIPE)</td></tr>
+          <tr><td>Custo de ficar sem o carro</td><td class="n">R$ 0 / 1.000 / 2.500</td><td>Três perfis; ver seção 3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-adms">
+    <div class="sec-head"><span class="eyebrow">2 · As administradoras</span><h2 id="h-adms">Os três consórcios mais atrativos</h2></div>
+    <p class="prose">Não existe ranking oficial. Selecionamos pelos critérios que mais pesam na conta e no risco: taxa de administração total, solidez e reputação da administradora (todas autorizadas pelo Banco Central) e flexibilidade de lance. As taxas publicadas são sempre "a partir de"; para não favorecer o consórcio, usamos valores um pouco acima do mínimo divulgado e testamos de 6,5% a 20% na seção 7.</p>
+    <div class="adms">
+      <article class="adm">
+        <div class="adm-head"><i style="background:var(--s1)"></i><h3>Rodobens</h3></div>
+        <dl>
+          <dt>Taxa de adm. usada</dt><dd>10,0%</dd>
+          <dt>Faixa divulgada</dt><dd>a partir de 6,5%–9,99%</dd>
+          <dt>Fundo de reserva</dt><dd>2%</dd>
+          <dt>Prazo</dt><dd>80 meses (60–100)</dd>
+          <dt>Parcela inicial</dt><dd>R$ 1.400</dd>
+        </dl>
+        <p>A menor taxa citada nos comparativos de 2026. Selo RA1000 no Reclame Aqui. Aceita lance livre, embutido e, em imóveis, FGTS. A taxa exata só aparece na simulação e varia com o prazo.</p>
+      </article>
+      <article class="adm">
+        <div class="adm-head"><i style="background:var(--s2)"></i><h3>Itaú Consórcio</h3></div>
+        <dl>
+          <dt>Taxa de adm. usada</dt><dd>12,0%</dd>
+          <dt>Faixa divulgada</dt><dd>a partir de 10%</dd>
+          <dt>Fundo de reserva</dt><dd>2%</dd>
+          <dt>Prazo</dt><dd>80 meses</dd>
+          <dt>Parcela inicial</dt><dd>R$ 1.425</dd>
+        </dl>
+        <p>Grande administradora de banco, com contratação pelo app. Lance embutido de até 30% do valor (carta + taxas), o mais flexível entre os três, o que ajuda quem precisa ser contemplado logo.</p>
+      </article>
+      <article class="adm">
+        <div class="adm-head"><i style="background:var(--s3)"></i><h3>Porto Consórcio</h3></div>
+        <dl>
+          <dt>Taxa de adm. usada</dt><dd>13,6%</dd>
+          <dt>Faixa divulgada</dt><dd>a partir de 0,17% a.m.</dd>
+          <dt>Fundo de reserva</dt><dd>2%</dd>
+          <dt>Prazo</dt><dd>80 meses (48–80)</dd>
+          <dt>Parcela inicial</dt><dd>R$ 1.445</dd>
+        </dl>
+        <p>A melhor reputação entre consumidores nos comparativos. A taxa oficial é mensal: 0,17% × 80 meses = 13,6% no plano. Alguns planos incluem serviços de seguro no pacote.</p>
+      </article>
+    </div>
+    <p class="prose note">Ficaram de fora: Mycon (digital, a partir de 9,99%, mas dados de prazo contraditórios entre fontes), Embracon (a partir de 15%) e Bradesco (14% a 20% mais ≈ 3% de fundo de reserva). A média do sistema, segundo a ABAC, é de cerca de 17,5% do crédito. Seguro prestamista (≈ 0,03–0,05% a.m. do saldo) não entrou no cálculo de nenhum dos lados.</p>
+  </section>
+
+  <section aria-labelledby="h-metodo">
+    <div class="sec-head"><span class="eyebrow">3 · Método</span><h2 id="h-metodo">Como comparar coisas que acontecem em meses diferentes</h2></div>
+    <div class="prose" style="display:grid;gap:14px">
+      <p>Somar parcelas engana: R$ 1.000 pagos daqui a cinco anos valem bem menos que R$ 1.000 hoje, porque o dinheiro poderia render no CDB. Por isso tudo é trazido a valor presente com a taxa líquida de 10,2% a.a. Para cada caminho, no mesmo horizonte de 80 meses:</p>
+      <p class="num" style="background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:0.875rem">Custo econômico = VP(entrada, parcelas, lances, tarifas, IOF) + VP(custo de ficar sem carro) − VP(revenda do carro no mês 80)</p>
+      <p><b>Financiamento:</b> 20% de entrada, saldo + tarifas + IOF em tabela Price. O carro chega no mês 0.</p>
+      <p><b>Consórcio:</b> parcela = carta × (1 + taxa de administração + fundo de reserva) ÷ 80, reajustada a cada 12 meses junto com a carta. Na contemplação, a carta compra o carro. Lances abatem o saldo e reduzem as parcelas seguintes. O fundo de reserva não é devolvido (hipótese conservadora).</p>
+      <p><b>Poupar e comprar à vista:</b> aplicar a entrada e a mesma parcela do financiamento num CDB e comprar quando o saldo alcança o preço reajustado (mês 29, no caso base).</p>
+      <p><b>Custo de ficar sem carro</b> é o que você gasta a mais por mês enquanto o carro novo não chega, já descontando IPVA, seguro e manutenção que deixaria de pagar. Três perfis: <b>R$ 0</b> (já tem um carro que atende, troca planejada); <b>R$ 1.000</b> (aplicativo e transporte público, ou um carro velho que dá despesa); <b>R$ 2.500</b> (precisaria alugar ou assinar um carro equivalente).</p>
+      <p>A revenda corrige uma distorção: quem é contemplado no mês 60 termina o horizonte com um carro de 20 meses, e quem financiou hoje, com um de 80 meses.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-curva">
+    <div class="sec-head"><span class="eyebrow">4 · Janelas de contemplação</span><h2 id="h-curva">Quanto custa cada caminho, conforme o mês da contemplação</h2></div>
+    <p class="prose">As linhas coloridas mostram o custo do consórcio se a contemplação acontecer em cada mês. As referências horizontais não dependem desse mês: o financiamento (faixa entre banco de montadora e média do BC, com a mediana destacada) e a estratégia de poupar.</p>
+    <div class="chart-card">
+      <div class="controls">
+        <span class="ctl-label">Custo de ficar sem carro</span>
+        <div class="seg" id="seg-mob" role="group" aria-label="Custo de ficar sem carro">
+          <button type="button" data-v="0" aria-pressed="false">R$ 0</button>
+          <button type="button" data-v="1000" aria-pressed="true">R$ 1.000</button>
+          <button type="button" data-v="2500" aria-pressed="false">R$ 2.500</button>
+        </div>
+        <span class="ctl-label">Financiamento</span>
+        <div class="seg" id="seg-prazo" role="group" aria-label="Prazo do financiamento">
+          <button type="button" data-v="36" aria-pressed="false">36×</button>
+          <button type="button" data-v="48" aria-pressed="true">48×</button>
+          <button type="button" data-v="60" aria-pressed="false">60×</button>
+        </div>
+      </div>
+      <div class="legend" id="legend-main"></div>
+      <div class="plot" id="plot-main"></div>
+      <p class="note" id="plot-main-cap"></p>
+    </div>
+    <div class="tbl-wrap"><table id="tbl-janelas"></table></div>
+  </section>
+
+  <section aria-labelledby="h-mapa">
+    <div class="sec-head"><span class="eyebrow">5 · Mapa de decisão</span><h2 id="h-mapa">Mês de contemplação × custo de ficar sem carro</h2></div>
+    <p class="prose">Cada célula é a diferença de custo, em R$ mil de hoje, entre o consórcio e o financiamento mediano (1,73% a.m., 48×). Azul: o consórcio economiza esse valor. Vermelho: o financiamento sai mais barato.</p>
+    <div class="chart-card">
+      <div class="controls">
+        <span class="ctl-label">Administradora</span>
+        <div class="seg" id="seg-adm" role="group" aria-label="Administradora">
+          <button type="button" data-v="0" aria-pressed="false">Rodobens</button>
+          <button type="button" data-v="1" aria-pressed="true">Itaú</button>
+          <button type="button" data-v="2" aria-pressed="false">Porto</button>
+        </div>
+      </div>
+      <div class="tbl-wrap" style="border:0;background:transparent"><table class="heat" id="heat"></table></div>
+      <p class="note">Linhas: mês em que a cota é contemplada. Colunas: custo mensal de ficar sem o carro novo, em R$ de hoje.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-fin">
+    <div class="sec-head"><span class="eyebrow">6 · Janelas de financiamento</span><h2 id="h-fin">Prazo do financiamento: mais curto é mais barato</h2></div>
+    <p class="prose">Como o CET (22% a 31% a.a.) é bem maior que o rendimento do CDB (10,2% a.a.), cada mês a mais de dívida encarece. Esticar de 36× para 60× reduz a parcela em ≈ R$ 900, mas custa de R$ 6,6 mil a R$ 11,7 mil a mais em valor presente. A parcela do consórcio fica em torno de R$ 1.400 a R$ 1.450.</p>
+    <div class="tbl-wrap"><table id="tbl-fin"></table></div>
+  </section>
+
+  <section aria-labelledby="h-lance">
+    <div class="sec-head"><span class="eyebrow">7 · Lances e sensibilidade</span><h2 id="h-lance">Lance compra tempo, não desconto</h2></div>
+    <div class="prose" style="display:grid;gap:14px">
+      <p>Dar lance com dinheiro próprio <b>aumenta</b> o custo financeiro do consórcio: você antecipa parcelas de um crédito que custa ≈ 8% a.a., quando esse dinheiro renderia 10,2% no CDB. O lance embutido também encarece, porque exige uma carta maior (para levar R$ 100 mil com 25% embutido, a carta é de R$ 133 mil e a taxa incide sobre ela). O lance vale pelo que ele compra: meses sem pagar o custo de ficar sem carro.</p>
+      <p>Os lances vencedores costumam ficar entre 20% e 35% da carta, variando muito por grupo. Antes de entrar, peça as atas das últimas assembleias com o histórico de lances vencedores.</p>
+    </div>
+    <div class="tbl-wrap"><table id="tbl-lance"></table></div>
+    <div class="tbl-wrap"><table id="tbl-sens"></table></div>
+    <p class="prose note">A Selic quase não muda a conclusão: com CDI de 9% a 15%, o mês-limite do Itaú (custo de mobilidade R$ 1.000) vai de 62 a 80. A taxa de administração pesa muito mais: cada 2,5 a 3 pontos a mais tiram de 6 a 12 meses da janela em que o consórcio vence.</p>
+  </section>
+
+  <section aria-labelledby="h-sim">
+    <div class="sec-head"><span class="eyebrow">8 · Simulador</span><h2 id="h-sim">Refaça a conta com os seus números</h2></div>
+    <p class="prose">Os campos já vêm com o caso base. Troque pela proposta real do banco e pela simulação da administradora: taxa de administração total, fundo de reserva, prazo e o lance que pretende oferecer.</p>
+    <div class="sim">
+      <form class="form" id="form" autocomplete="off">
+        <fieldset>
+          <legend>Carro e mercado</legend>
+          <div class="field"><label for="f-preco">Preço do carro (R$)</label><input id="f-preco" type="number" step="1000" min="10000" value="100000"></div>
+          <div class="field"><label for="f-cdi">CDI médio (% a.a.)</label><input id="f-cdi" type="number" step="0.25" value="12"></div>
+          <div class="field"><label for="f-ipca">Reajuste do carro (% a.a.)</label><input id="f-ipca" type="number" step="0.25" value="4.5"></div>
+          <div class="field"><label for="f-dep">Depreciação (% a.a.)</label><input id="f-dep" type="number" step="0.5" value="10"></div>
+          <div class="field"><label for="f-mob">Custo de ficar sem carro (R$/mês)</label><input id="f-mob" type="number" step="100" min="0" value="1000"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Financiamento</legend>
+          <div class="field"><label for="f-ent">Entrada (%)</label><input id="f-ent" type="number" step="5" min="0" max="90" value="20"></div>
+          <div class="field"><label for="f-tx">Taxa (% a.m.)</label><input id="f-tx" type="number" step="0.01" min="0" value="1.73"></div>
+          <div class="field"><label for="f-pf">Prazo (meses)</label><select id="f-pf"><option>24</option><option>36</option><option selected>48</option><option>60</option><option>72</option></select></div>
+          <div class="field"><label for="f-tar">Tarifas (R$)</label><input id="f-tar" type="number" step="100" min="0" value="1300"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Consórcio</legend>
+          <div class="field"><label for="f-adm">Administradora</label><select id="f-adm"><option value="0">Rodobens</option><option value="1" selected>Itaú</option><option value="2">Porto</option><option value="x">Outra</option></select></div>
+          <div class="field"><label for="f-ta">Taxa de adm. total (%)</label><input id="f-ta" type="number" step="0.5" min="0" value="12"></div>
+          <div class="field"><label for="f-fr">Fundo de reserva (%)</label><input id="f-fr" type="number" step="0.5" min="0" value="2"></div>
+          <div class="field"><label for="f-pc">Prazo (meses)</label><input id="f-pc" type="number" step="1" min="12" max="200" value="80"></div>
+          <div class="field"><label for="f-ll">Lance livre (% da carta)</label><input id="f-ll" type="number" step="5" min="0" max="80" value="0"></div>
+          <div class="field"><label for="f-le">Lance embutido (% da carta)</label><input id="f-le" type="number" step="5" min="0" max="30" value="0"></div>
+        </fieldset>
+      </form>
+      <div class="out">
+        <div class="verdict-line" id="sim-verdict" aria-live="polite"></div>
+        <div class="kpis" id="sim-kpis"></div>
+        <div class="chart-card">
+          <div class="legend" id="legend-sim"></div>
+          <div class="plot" id="plot-sim"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-perfis">
+    <div class="sec-head"><span class="eyebrow">9 · Recomendação</span><h2 id="h-perfis">Qual caminho para qual situação</h2></div>
+    <div class="perfis">
+      <div class="perfil"><span class="tag">Troca planejada</span><h3>Consórcio, sem lance</h3><p>Tem um carro que ainda atende e quer trocar em 2 a 6 anos. O consórcio vence em qualquer janela, e a Rodobens é a mais barata das três. Se der para esperar uns 2,5 anos, poupar no CDB e comprar à vista também funciona e evita a taxa de administração; o consórcio ganha pela disciplina da parcela.</p></div>
+      <div class="perfil"><span class="tag">Precisa em até 1 ano</span><h3>Consórcio com lance, com plano B</h3><p>Use a entrada que daria no financiamento como lance livre e, se preciso, some lance embutido (Itaú aceita até 30%). Com 40% a 50% de lance, a contemplação costuma vir nas primeiras assembleias. Se não vier em 2 a 3 meses, financie: com custo de R$ 2.500/mês sem carro, a vantagem some por volta do 14º mês.</p></div>
+      <div class="perfil"><span class="tag">Precisa agora</span><h3>Financiamento curto e barato</h3><p>Sem tempo para assembleia, financie, mas no menor prazo que caiba no orçamento, com a maior entrada possível e cotando o banco da montadora (mediana de 1,49% a.m., às vezes taxa subsidiada). Compare o CET, não a taxa nominal. Amortizar antecipadamente reduz juros na hora.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-riscos">
+    <div class="sec-head"><span class="eyebrow">10 · Ressalvas</span><h2 id="h-riscos">O que o modelo não captura</h2></div>
+    <ul class="clean prose">
+      <li><b>Data da contemplação é incerta.</b> Sem lance, ela pode vir no mês 1 ou no 80. O estudo mostra todas as janelas; a "esperada" supõe sorteio uniforme.</li>
+      <li><b>Taxas reais variam por grupo e prazo.</b> As administradoras divulgam mínimos. Peça o regulamento do grupo e confira taxa total, fundo de reserva, seguro e índice de reajuste.</li>
+      <li><b>Crédito aprovado nos dois casos.</b> O contemplado também passa por análise de crédito e o carro fica alienado à administradora até a quitação.</li>
+      <li><b>Desistência custa caro.</b> No consórcio, quem sai só recebe de volta quando a cota é sorteada ou no fim do grupo, com multa. No financiamento, dá para quitar antes com abatimento de juros.</li>
+      <li><b>Desconfie de "contemplação garantida".</b> Ninguém garante data de contemplação. Confirme no site do Banco Central se a administradora é autorizada.</li>
+      <li><b>Preço do carro e da carta podem descolar.</b> Se o modelo subir mais que o índice da carta, você completa a diferença do bolso.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-fontes">
+    <div class="sec-head"><span class="eyebrow">Fontes</span><h2 id="h-fontes">De onde vêm os números</h2></div>
+    <ul class="sources">
+      <li><a href="https://www.folhape.com.br/economia/banco-central-surpreende-e-mantem-juros-basicos-em-1375-ao-ano/522444/" target="_blank" rel="noopener">Folha PE: BC mantém Selic em 13,75% (04/11/2026)</a></li>
+      <li><a href="https://paraibabusiness.com.br/focus-reduz-ipca-de-2026-para-511-e-eleva-o-de-2027-para-5/" target="_blank" rel="noopener">Paraíba Business: Focus de 16/11/2026 (IPCA e Selic)</a></li>
+      <li><a href="https://garagem360.com.br/?p=322210" target="_blank" rel="noopener">Garagem360: bancos de montadora com mediana de 1,49% a.m. em outubro</a></li>
+      <li><a href="https://www.opovo.com.br/noticias/economia/2026/07/30/juro-medio-no-credito-livre-sobe-a-498-em-junho-de-493-em-maio-afirma-bc.html" target="_blank" rel="noopener">O Povo: juro médio para veículos em 26,4% a.a. (BC, junho)</a></li>
+      <li><a href="https://dadosabertos.bcb.gov.br/eu/dataset/20749-taxa-media-de-juros-das-operacoes-de-credito-com-recursos-livres---pessoas-fisicas---aquisica" target="_blank" rel="noopener">Banco Central: série 20749, aquisição de veículos PF</a></li>
+      <li><a href="https://economicnewsbrasil.com.br/2026/10/05/financiamento-de-veiculos-usados/" target="_blank" rel="noopener">Economic News Brasil: taxa de 26,52% a.a. em julho</a></li>
+      <li><a href="https://cidesp.com.br/conteudo/tabela-de-taxa-de-administracao-de-consorcio-atualizada" target="_blank" rel="noopener">CIDESP: tabela de taxas de administração</a></li>
+      <li><a href="https://www.idinheiro.com.br/consorcios/carro/consorcio-de-carro-com-a-menor-taxa/" target="_blank" rel="noopener">iDinheiro: consórcio de carro com menor taxa</a></li>
+      <li><a href="https://www.idinheiro.com.br/consorcios/consorcio-rodobens/" target="_blank" rel="noopener">iDinheiro: Consórcio Rodobens</a></li>
+      <li><a href="https://www.portoseguro.com.br/conteudo/consorcio/produto/auto-imovel/consorcio-auto.html" target="_blank" rel="noopener">Porto: Consórcio Auto (taxa a partir de 0,17% a.m.)</a></li>
+      <li><a href="https://www.consorciocred.com/o-que-ninguem-te-conta-sobre-o-lance-embutido-do-itau/" target="_blank" rel="noopener">ConsorcioCred: lance embutido do Itaú</a></li>
+      <li><a href="https://blog.itau.com.br/consorcio/o-que-eu-pago-nas-parcelas-de-consorcio/blt0beb7c3cb00e5a90" target="_blank" rel="noopener">Itaú: o que compõe a parcela do consórcio</a></li>
+      <li><a href="https://www.idinheiro.com.br/consorcios/consorcio-bradesco/" target="_blank" rel="noopener">iDinheiro: Consórcio Bradesco</a></li>
+      <li><a href="https://www.idinheiro.com.br/consorcios/consorcio-mycon/" target="_blank" rel="noopener">iDinheiro: Consórcio Mycon</a></li>
+      <li><a href="https://legismap.com.br/conteudos/artigos-e-noticias/abac-sistema-de-consorcios-em-agosto-2026-dados-economicos" target="_blank" rel="noopener">ABAC: Sistema de Consórcios em agosto de 2026</a></li>
+      <li><a href="https://www.autodata.com.br/noticias/2026/09/23/adesoes-a-consorcios-de-veiculos-crescem-7-ate-agosto/136102/" target="_blank" rel="noopener">AutoData: adesões a consórcios de veículos até agosto</a></li>
+      <li><a href="https://consultadeplaca.net/blog/consorcio-carro-porto-velho-2026" target="_blank" rel="noopener">Consulta de Placa: lances vencedores entre 20% e 35%</a></li>
+    </ul>
+    <p class="note prose">Estudo educativo, não é recomendação de investimento. Taxas de administradoras vêm de comparativos de terceiros e páginas comerciais; confirme sempre na simulação oficial e no regulamento do grupo.</p>
+  </section>
+</div>
+
+<script>
+/*
+ * Motor de cálculo: financiamento (CDC, tabela Price) × consórcio × poupar e comprar à vista.
+ *
+ * Métrica principal: CUSTO ECONÔMICO EM VALOR PRESENTE (VP), em R$ de hoje, no horizonte T:
+ *   VP(desembolsos)                         entrada, parcelas, lances, tarifas
+ * + VP(custo de mobilidade sem carro)       meses em que ainda não há carro
+ * − VP(valor de revenda do carro em T)      carro comprado mais tarde vale mais em T
+ * Desconto pela taxa líquida de um CDB 100% do CDI (custo de oportunidade).
+ * Menor VP = melhor. Todas as estratégias usam o mesmo horizonte T.
+ */
+(function (root) {
+  'use strict';
+
+  const mFromA = (a) => Math.pow(1 + a, 1 / 12) - 1; // taxa anual -> mensal
+  const aFromM = (m) => Math.pow(1 + m, 12) - 1; // taxa mensal -> anual
+
+  function defaults() {
+    return {
+      preco: 100000, // preço do carro hoje (R$)
+      ipca: 0.045, // reajuste anual do preço do carro / da carta (a.a.)
+      cdi: 0.12, // CDI médio no horizonte (a.a.)
+      ir: 0.15, // IR sobre renda fixa > 720 dias
+      deprec: 0.1, // depreciação anual frente ao carro 0 km
+      mobilidade: 1000, // custo líquido mensal de ficar sem carro (R$ de hoje)
+      // financiamento
+      entradaPct: 0.2,
+      taxaFinM: 0.0173, // a.m.
+      prazoFin: 48,
+      tarifas: 1300, // cadastro + registro de contrato (gravame)
+      // consórcio
+      taxaAdm: 0.12, // sobre o crédito, no plano inteiro
+      fundoReserva: 0.02,
+      prazoCons: 80,
+      lanceLivrePct: 0, // % da carta pago com recursos próprios na contemplação
+      lanceEmbutidoPct: 0, // % da carta usado como lance embutido
+      devolveFR: 0, // fração do fundo de reserva devolvida no encerramento
+    };
+  }
+
+  // Taxa de desconto mensal líquida de IR
+  function taxaDesconto(p) {
+    return mFromA(p.cdi * (1 - p.ir));
+  }
+
+  // Índice de preço do carro/carta: reajuste anual em degraus (a cada 12 meses)
+  const indice = (p, mes) => Math.pow(1 + p.ipca, Math.floor(mes / 12));
+
+  // Valor de revenda em T de um carro comprado 0 km no mês tb
+  function revenda(p, tb, T) {
+    const novoEmT = p.preco * Math.pow(1 + p.ipca, T / 12);
+    return novoEmT * Math.pow(1 - p.deprec, (T - tb) / 12);
+  }
+
+  function vpMobilidade(p, ateMes, r) {
+    let s = 0;
+    for (let m = 1; m <= ateMes; m++) s += (p.mobilidade * indice(p, m - 1)) / Math.pow(1 + r, m);
+    return s;
+  }
+
+  /* ---------------- Financiamento (Price + IOF PF) ---------------- */
+  function financiamento(p) {
+    const i = p.taxaFinM;
+    const n = p.prazoFin;
+    const entrada = p.preco * p.entradaPct;
+    const base = p.preco - entrada + p.tarifas;
+    // IOF PF: 0,0082% a.d. sobre cada amortização (limitado a 365 dias) + 0,38% fixo, financiado.
+    let principal = base;
+    let iof = 0;
+    for (let it = 0; it < 30; it++) {
+      const pmt = (principal * i) / (1 - Math.pow(1 + i, -n));
+      let saldo = principal;
+      let iofDiario = 0;
+      for (let j = 1; j <= n; j++) {
+        const juros = saldo * i;
+        const amort = pmt - juros;
+        iofDiario += amort * 0.000082 * Math.min(30 * j, 365);
+        saldo -= amort;
+      }
+      iof = iofDiario + principal * 0.0038;
+      principal = base + iof;
+    }
+    const pmt = (principal * i) / (1 - Math.pow(1 + i, -n));
+    // CET mensal: taxa que iguala (preço − entrada) às parcelas
+    const cetM = irr([-(p.preco - entrada), ...Array(n).fill(pmt)].map((v) => -v));
+    return { entrada, principal, iof, pmt, n, totalPago: entrada + pmt * n, cetM, cetA: aFromM(cetM) };
+  }
+
+  /* ---------------- Consórcio ----------------
+   * Parcela = carta × (1 + taxa adm + fundo de reserva) / prazo, reajustada anualmente com a carta.
+   * Lance (livre e/ou embutido) na contemplação abate o saldo e reduz as parcelas restantes.
+   * Lance embutido: a carta contratada é maior (carta = preço / (1 − %embutido)), para que o crédito
+   * líquido compre o carro.
+   */
+  function consorcio(p, k) {
+    const n = p.prazoCons;
+    const carta0 = p.preco / (1 - p.lanceEmbutidoPct);
+    const fator = 1 + p.taxaAdm + p.fundoReserva;
+    const fluxos = []; // fluxo do consorciado por mês (negativo = paga)
+    let pctPago = 0; // fração do "valor total do plano" já quitada
+    let fatorParcela = 1; // após lance, as parcelas restantes são reduzidas
+    let lanceLivre = 0;
+    for (let m = 1; m <= n; m++) {
+      const carta = carta0 * indice(p, m - 1);
+      const parcela = (carta * fator * fatorParcela) / n;
+      let f = -parcela;
+      pctPago += fatorParcela / n;
+      if (m === k) {
+        const creditoLiquido = carta * (1 - p.lanceEmbutidoPct);
+        f += creditoLiquido; // carta usada na compra (ida e volta: carro adquirido)
+        // lances, expressos em % da carta; abatem o saldo devedor (em % do plano)
+        const lancePctPlano = (p.lanceLivrePct + p.lanceEmbutidoPct) / fator;
+        lanceLivre = carta * p.lanceLivrePct;
+        f -= lanceLivre;
+        const restante = 1 - pctPago;
+        const restanteApos = Math.max(0, restante - lancePctPlano);
+        fatorParcela = restante > 0 ? (fatorParcela * restanteApos) / restante : 0;
+      }
+      fluxos.push(f);
+    }
+    // devolução do fundo de reserva não utilizado no fim do grupo
+    const frPago = carta0 * p.fundoReserva * indice(p, n - 1);
+    fluxos[n - 1] += frPago * p.devolveFR;
+    return { fluxos, carta0, lanceLivre };
+  }
+
+  /* ---------------- VP das estratégias ---------------- */
+  function horizonte(p) {
+    return Math.max(p.prazoCons, p.prazoFin);
+  }
+
+  function vpFinanciamento(p) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const f = financiamento(p);
+    let vp = f.entrada;
+    for (let j = 1; j <= f.n; j++) vp += f.pmt / Math.pow(1 + r, j);
+    const vpRev = revenda(p, 0, T) / Math.pow(1 + r, T);
+    return { vp: vp - vpRev, desembolso: vp, revenda: vpRev, mobilidade: 0, det: f };
+  }
+
+  function vpConsorcio(p, k) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const c = consorcio(p, k);
+    // desembolsos líquidos: parcelas + lance − carta, mais a compra do carro pelo preço do mês k
+    let vp = 0;
+    c.fluxos.forEach((f, idx) => (vp += -f / Math.pow(1 + r, idx + 1)));
+    const precoK = p.preco * indice(p, k - 1); // carta reajustada = preço do carro no mês
+    vp += precoK / Math.pow(1 + r, k);
+    const mob = vpMobilidade(p, k - 1, r) + (p.mobilidade * indice(p, k - 1) * 0.5) / Math.pow(1 + r, k); // meio mês até retirar o carro
+    const vpRev = revenda(p, k, T) / Math.pow(1 + r, T);
+    // taxa implícita do consórcio (fluxo financeiro puro, sem carro/mobilidade)
+    let tx = null;
+    try {
+      tx = irr(c.fluxos.map((v) => -v));
+    } catch (e) {
+      tx = null;
+    }
+    return { vp: vp + mob - vpRev, desembolso: vp, revenda: vpRev, mobilidade: mob, taxaImplicitaM: tx, det: c };
+  }
+
+  // Poupar a parcela do financiamento (mais a entrada) em CDB e comprar à vista quando der
+  function vpPoupar(p) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const f = financiamento(p);
+    let saldo = f.entrada;
+    let tb = null;
+    for (let m = 1; m <= 600; m++) {
+      saldo = saldo * (1 + r) + f.pmt;
+      if (saldo >= p.preco * indice(p, m)) {
+        tb = m;
+        break;
+      }
+    }
+    if (tb === null) return null;
+    const vpCompra = (p.preco * indice(p, tb)) / Math.pow(1 + r, tb);
+    const mob = vpMobilidade(p, tb, r);
+    const tbEf = Math.min(tb, T);
+    const vpRev = revenda(p, tbEf, T) / Math.pow(1 + r, T);
+    return { vp: vpCompra + mob - vpRev, desembolso: vpCompra, revenda: vpRev, mobilidade: mob, mes: tb };
+  }
+
+  function vpAVista(p) {
+    const r = taxaDesconto(p);
+    const T = horizonte(p);
+    const vpRev = revenda(p, 0, T) / Math.pow(1 + r, T);
+    return { vp: p.preco - vpRev, desembolso: p.preco, revenda: vpRev, mobilidade: 0 };
+  }
+
+  // Custo esperado com contemplação por sorteio (distribuição uniforme entre os meses 1..n)
+  function vpConsorcioEsperado(p) {
+    let s = 0;
+    for (let k = 1; k <= p.prazoCons; k++) s += vpConsorcio(p, k).vp;
+    return s / p.prazoCons;
+  }
+
+  // Último mês de contemplação em que o consórcio ainda empata ou vence o financiamento
+  function breakEven(p) {
+    const fin = vpFinanciamento(p).vp;
+    let ultimo = 0;
+    for (let k = 1; k <= p.prazoCons; k++) if (vpConsorcio(p, k).vp <= fin) ultimo = k;
+    return ultimo;
+  }
+
+  // TIR mensal por bisseção, fluxos na convenção "positivo = recebe"
+  function irr(cf) {
+    const npv = (r) => cf.reduce((s, v, t) => s + v / Math.pow(1 + r, t), 0);
+    let lo = -0.05;
+    let hi = 0.2;
+    let flo = npv(lo);
+    let fhi = npv(hi);
+    if (flo * fhi > 0) throw new Error('sem TIR');
+    for (let it = 0; it < 200; it++) {
+      const mid = (lo + hi) / 2;
+      const fm = npv(mid);
+      if (flo * fm <= 0) {
+        hi = mid;
+        fhi = fm;
+      } else {
+        lo = mid;
+        flo = fm;
+      }
+    }
+    return (lo + hi) / 2;
+  }
+
+  const api = {
+    defaults,
+    mFromA,
+    aFromM,
+    taxaDesconto,
+    financiamento,
+    consorcio,
+    vpFinanciamento,
+    vpConsorcio,
+    vpConsorcioEsperado,
+    vpPoupar,
+    vpAVista,
+    breakEven,
+    irr,
+    horizonte,
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.Motor = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const M = window.Motor;
+  const ADMS = [
+    { nome: 'Rodobens', cor: '--s1', taxaAdm: 0.10, fundoReserva: 0.02, prazoCons: 80 },
+    { nome: 'Itaú', cor: '--s2', taxaAdm: 0.12, fundoReserva: 0.02, prazoCons: 80 },
+    { nome: 'Porto', cor: '--s3', taxaAdm: 0.136, fundoReserva: 0.02, prazoCons: 80 },
+  ];
+  const FIN = [
+    { nome: 'Montadora 1,49%', taxaFinM: 0.0149 },
+    { nome: 'Mediana 1,73%', taxaFinM: 0.0173 },
+    { nome: 'Média BC 1,97%', taxaFinM: 0.0197 },
+  ];
+  const JANELAS = [1, 3, 6, 12, 18, 24, 36, 48, 60, 72, 80];
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const brl = (v) => 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+  const mil = (v) => (v / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const pct = (v, d = 1) => (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+  const el = (tag, attrs = {}, text) => {
+    const e = document.createElement(tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    return e;
+  };
+  const svgEl = (tag, attrs = {}) => {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  };
+  const base = M.defaults();
+
+  /* ---------- Carnê do topo ---------- */
+  function drawCarne() {
+    const p = { ...base, ...ADMS[1] };
+    const fin = M.vpFinanciamento(p).vp;
+    const g = document.getElementById('carne');
+    g.textContent = '';
+    let be = 0;
+    for (let k = 1; k <= 80; k++) {
+      const c = M.vpConsorcio(p, k).vp;
+      const s = el('span', { title: 'Mês ' + k + ': consórcio ' + brl(c) + ' × financiamento ' + brl(fin) });
+      if (c > fin) s.className = 'lose'; else be = k;
+      g.appendChild(s);
+    }
+    document.getElementById('carne-be').textContent = 'Vantagem do consórcio até o mês ' + be;
+  }
+
+  /* ---------- Gráfico de custo × mês de contemplação ---------- */
+  function drawCurve(host, legendHost, cfg) {
+    // cfg: { p (parâmetros base), adms: [{nome, cor, ...}], refs: {band:[lo,hi], fin, poupar} }
+    host.textContent = '';
+    const W = cfg.W || 760, H = cfg.H || 340, ml = 52, mr = 132, mt = 14, mb = 36;
+    const n = Math.max(...cfg.adms.map((a) => a.prazoCons));
+    const series = cfg.adms.map((a) => {
+      const p = { ...cfg.p, ...a };
+      const pts = [];
+      for (let k = 1; k <= a.prazoCons; k++) pts.push([k, M.vpConsorcio(p, k).vp]);
+      return { ...a, pts };
+    });
+    const vals = series.flatMap((s) => s.pts.map((d) => d[1]));
+    const refsVals = [cfg.refs.fin, cfg.refs.poupar, ...(cfg.refs.band || [])].filter((v) => v != null);
+    let lo = Math.min(...vals, ...refsVals), hi = Math.max(...vals, ...refsVals);
+    const step = niceStep((hi - lo) / 5);
+    lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+    const x = (k) => ml + ((k - 1) / (n - 1)) * (W - ml - mr);
+    const y = (v) => mt + (1 - (v - lo) / (hi - lo)) * (H - mt - mb);
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Custo em valor presente por mês de contemplação' });
+    // grade
+    for (let v = lo; v <= hi + 1e-6; v += step) {
+      svg.appendChild(svgEl('line', { x1: ml, x2: W - mr, y1: y(v), y2: y(v), stroke: css('--rule'), 'stroke-width': 1 }));
+      const t = svgEl('text', { x: ml - 8, y: y(v) + 4, 'text-anchor': 'end' }); t.textContent = Math.round(v / 1000) + ' mil'; svg.appendChild(t);
+    }
+    [1, 12, 24, 36, 48, 60, 72, n].filter((v, i, a) => v <= n && a.indexOf(v) === i).forEach((k) => {
+      const t = svgEl('text', { x: x(k), y: H - mb + 18, 'text-anchor': 'middle' }); t.textContent = k; svg.appendChild(t);
+    });
+    const xl = svgEl('text', { x: (ml + W - mr) / 2, y: H - 4, 'text-anchor': 'middle' }); xl.textContent = 'mês da contemplação'; svg.appendChild(xl);
+    // referências
+    const labels = [];
+    if (cfg.refs.band) {
+      const [b1, b2] = cfg.refs.band;
+      svg.appendChild(svgEl('rect', { x: ml, width: W - ml - mr, y: y(Math.max(b1, b2)), height: Math.abs(y(b1) - y(b2)), fill: css('--band') }));
+    }
+    if (cfg.refs.fin != null) {
+      svg.appendChild(svgEl('line', { x1: ml, x2: W - mr, y1: y(cfg.refs.fin), y2: y(cfg.refs.fin), stroke: css('--ink-2'), 'stroke-width': 1.5 }));
+      labels.push({ v: cfg.refs.fin, t: 'Financiamento ' + mil(cfg.refs.fin) + ' mil' });
+    }
+    if (cfg.refs.poupar != null) {
+      svg.appendChild(svgEl('line', { x1: ml, x2: W - mr, y1: y(cfg.refs.poupar), y2: y(cfg.refs.poupar), stroke: css('--muted'), 'stroke-width': 1, 'stroke-dasharray': '1 3', 'stroke-linecap': 'round' }));
+      labels.push({ v: cfg.refs.poupar, t: 'Poupar ' + mil(cfg.refs.poupar) + ' mil' });
+    }
+    // séries
+    series.forEach((s) => {
+      const d = s.pts.map((pt, i) => (i ? 'L' : 'M') + x(pt[0]).toFixed(1) + ' ' + y(pt[1]).toFixed(1)).join(' ');
+      svg.appendChild(svgEl('path', { d, fill: 'none', stroke: css(s.cor), 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+      const last = s.pts[s.pts.length - 1];
+      svg.appendChild(svgEl('circle', { cx: x(last[0]), cy: y(last[1]), r: 4, fill: css(s.cor), stroke: css('--surface'), 'stroke-width': 2 }));
+      labels.push({ v: last[1], t: s.nome + ' ' + mil(last[1]) + ' mil' });
+    });
+    // rótulos à direita sem sobreposição
+    labels.sort((a, b) => y(a.v) - y(b.v));
+    let prev = -Infinity;
+    labels.forEach((l) => {
+      let yy = Math.max(y(l.v) + 4, prev + 14);
+      prev = yy;
+      const t = svgEl('text', { x: W - mr + 8, y: yy, class: 'lbl' }); t.textContent = l.t; svg.appendChild(t);
+    });
+    // camada de hover
+    const cross = svgEl('line', { y1: mt, y2: H - mb, stroke: css('--rule-strong'), 'stroke-width': 1, visibility: 'hidden' });
+    svg.appendChild(cross);
+    const dots = series.map((s) => { const c = svgEl('circle', { r: 4, fill: css(s.cor), stroke: css('--surface'), 'stroke-width': 2, visibility: 'hidden' }); svg.appendChild(c); return c; });
+    const hit = svgEl('rect', { x: ml, y: mt, width: W - ml - mr, height: H - mt - mb, fill: 'transparent', tabindex: 0, 'aria-label': 'Explorar valores por mês' });
+    svg.appendChild(hit);
+    host.appendChild(svg);
+    const tip = el('div', { class: 'tip', hidden: '' });
+    host.appendChild(tip);
+    let curK = 1;
+    function show(k) {
+      curK = Math.min(n, Math.max(1, k));
+      cross.setAttribute('x1', x(curK)); cross.setAttribute('x2', x(curK)); cross.setAttribute('visibility', 'visible');
+      tip.textContent = '';
+      tip.appendChild(el('div', { class: 't-h' }, 'Contemplação no mês ' + curK));
+      series.forEach((s, i) => {
+        const pt = s.pts[curK - 1];
+        if (!pt) { dots[i].setAttribute('visibility', 'hidden'); return; }
+        dots[i].setAttribute('cx', x(pt[0])); dots[i].setAttribute('cy', y(pt[1])); dots[i].setAttribute('visibility', 'visible');
+        const r = el('div', { class: 't-r' });
+        const sp = el('span'); const ii = el('i'); ii.style.background = css(s.cor); sp.appendChild(ii); sp.appendChild(document.createTextNode(s.nome));
+        r.appendChild(sp); r.appendChild(el('b', {}, brl(pt[1]))); tip.appendChild(r);
+      });
+      if (cfg.refs.fin != null) { const r = el('div', { class: 't-r' }); r.appendChild(el('span', {}, 'Financiamento')); r.appendChild(el('b', {}, brl(cfg.refs.fin))); tip.appendChild(r); }
+      if (cfg.refs.poupar != null) { const r = el('div', { class: 't-r' }); r.appendChild(el('span', {}, 'Poupar e comprar')); r.appendChild(el('b', {}, brl(cfg.refs.poupar))); tip.appendChild(r); }
+      tip.hidden = false;
+      const box = host.getBoundingClientRect();
+      const px = (x(curK) / W) * box.width;
+      const tw = tip.offsetWidth;
+      tip.style.left = Math.max(0, Math.min(box.width - tw, px > box.width / 2 ? px - tw - 12 : px + 12)) + 'px';
+      tip.style.top = '8px';
+    }
+    function hide() { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); dots.forEach((d) => d.setAttribute('visibility', 'hidden')); }
+    hit.addEventListener('pointermove', (ev) => {
+      const r = svg.getBoundingClientRect();
+      const sx = ((ev.clientX - r.left) / r.width) * W;
+      show(Math.round(1 + ((sx - ml) / (W - ml - mr)) * (n - 1)));
+    });
+    hit.addEventListener('pointerleave', hide);
+    hit.addEventListener('focus', () => show(curK));
+    hit.addEventListener('blur', hide);
+    hit.addEventListener('keydown', (ev) => {
+      if (ev.key === 'ArrowRight') { show(curK + 1); ev.preventDefault(); }
+      if (ev.key === 'ArrowLeft') { show(curK - 1); ev.preventDefault(); }
+    });
+    // legenda
+    if (legendHost) {
+      legendHost.textContent = '';
+      series.forEach((s) => { const sp = el('span'); const l = el('i', { class: 'ln' }); l.style.background = css(s.cor); sp.appendChild(l); sp.appendChild(document.createTextNode('Consórcio ' + s.nome)); legendHost.appendChild(sp); });
+      if (cfg.refs.fin != null) { const sp = el('span'); const l = el('i', { class: 'ln' }); l.style.background = css('--ink-2'); sp.appendChild(l); sp.appendChild(document.createTextNode(cfg.refs.finLabel || 'Financiamento')); legendHost.appendChild(sp); }
+      if (cfg.refs.band) { const sp = el('span'); sp.appendChild(el('i', { class: 'bd' })); sp.appendChild(document.createTextNode('Faixa: montadora a média BC')); legendHost.appendChild(sp); }
+      if (cfg.refs.poupar != null) { const sp = el('span'); const l = el('i', { class: 'ln' }); l.style.background = css('--muted'); sp.appendChild(l); sp.appendChild(document.createTextNode('Poupar e comprar à vista')); legendHost.appendChild(sp); }
+    }
+  }
+  function niceStep(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw)));
+    const f = raw / p;
+    return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p;
+  }
+
+  /* ---------- Seção 4 ---------- */
+  const state = { mob: 1000, prazoFin: 48, adm: 1 };
+  function drawMain() {
+    const p = { ...base, mobilidade: state.mob, prazoFin: state.prazoFin };
+    const fins = FIN.map((f) => M.vpFinanciamento({ ...p, taxaFinM: f.taxaFinM }));
+    const poup = M.vpPoupar(p);
+    drawCurve(document.getElementById('plot-main'), document.getElementById('legend-main'), {
+      p, adms: ADMS,
+      refs: { band: [fins[0].vp, fins[2].vp], fin: fins[1].vp, finLabel: 'Financiamento mediano 1,73% a.m., ' + state.prazoFin + '×', poupar: poup ? poup.vp : null },
+    });
+    const be = ADMS.map((a) => M.breakEven({ ...p, ...a }));
+    document.getElementById('plot-main-cap').textContent =
+      'Com custo de ' + brl(state.mob) + '/mês sem carro e financiamento em ' + state.prazoFin + '×, o consórcio vence o financiamento mediano se a contemplação vier até o mês ' +
+      be.map((b, i) => b + ' (' + ADMS[i].nome + ')').join(', ') + '. Poupar e comprar à vista leva ' + (poup ? poup.mes : '–') + ' meses.';
+    // tabela
+    const t = document.getElementById('tbl-janelas');
+    t.textContent = '';
+    const th = el('thead'); const hr = el('tr');
+    hr.appendChild(el('th', {}, 'Contemplação no mês'));
+    ADMS.forEach((a) => { const h = el('th', { class: 'n' }); const s = el('i', { class: 'sw' }); s.style.background = css(a.cor); h.appendChild(s); h.appendChild(document.createTextNode(a.nome)); hr.appendChild(h); });
+    hr.appendChild(el('th', { class: 'n' }, 'Taxa implícita Itaú'));
+    th.appendChild(hr); t.appendChild(th);
+    const tb = el('tbody');
+    const finRef = fins[1].vp;
+    JANELAS.forEach((k) => {
+      const tr = el('tr'); tr.appendChild(el('td', { class: 'n', style: 'text-align:left' }, String(k)));
+      ADMS.forEach((a) => {
+        const v = M.vpConsorcio({ ...p, ...a }, k).vp;
+        tr.appendChild(el('td', { class: 'n ' + (v <= finRef ? 'win' : 'lose-t') }, brl(v)));
+      });
+      const tx = M.vpConsorcio({ ...p, ...ADMS[1] }, k).taxaImplicitaM;
+      tr.appendChild(el('td', { class: 'n' }, k <= 12 && tx != null ? pct(M.aFromM(tx)) + ' a.a.' : '–'));
+      tb.appendChild(tr);
+    });
+    const ref = (label, v) => { const tr = el('tr'); tr.appendChild(el('td', {}, label)); const td = el('td', { class: 'n', colspan: 3 }, brl(v)); tr.appendChild(td); tr.appendChild(el('td')); tb.appendChild(tr); };
+    const esp = ADMS.map((a) => M.vpConsorcioEsperado({ ...p, ...a }));
+    const tr = el('tr'); tr.appendChild(el('td', {}, 'Esperado por sorteio'));
+    esp.forEach((v) => tr.appendChild(el('td', { class: 'n ' + (v <= finRef ? 'win' : 'lose-t') }, brl(v)))); tr.appendChild(el('td')); tb.appendChild(tr);
+    FIN.forEach((f, i) => ref('Financiamento ' + f.nome + ' a.m., ' + state.prazoFin + '× (CET ' + pct(fins[i].det.cetA) + ' a.a.)', fins[i].vp));
+    if (poup) ref('Poupar e comprar no mês ' + poup.mes, poup.vp);
+    ref('À vista hoje (se tiver o dinheiro)', M.vpAVista(p).vp);
+    t.appendChild(tb);
+    const cap = el('caption', { style: 'caption-side:bottom;text-align:left;padding:10px 12px;color:var(--ink-2);font-size:0.8125rem' }, 'Custo econômico em valor presente. Verde: abaixo do financiamento mediano. Taxa implícita = custo anual do crédito do consórcio, mostrado só até o mês 12, onde a conta faz sentido como empréstimo.');
+    t.appendChild(cap);
+  }
+
+  /* ---------- Seção 5: mapa ---------- */
+  const MOB_GRID = [0, 500, 1000, 1500, 2000, 2500, 3000];
+  function heatColor(v, maxAbs) {
+    const t = Math.min(1, Math.abs(v) / maxAbs);
+    const mix = (a, b, f) => a.map((c, i) => Math.round(c + (b[i] - c) * f));
+    const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    const mid = hex(css('--mid'));
+    const pole = hex(css(v <= 0 ? '--win' : '--lose'));
+    const c = mix(mid, pole, Math.pow(t, 0.75));
+    const lum = (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+    return { bg: `rgb(${c.join(',')})`, fg: lum < 0.55 ? '#ffffff' : '#11171a' };
+  }
+  function drawHeat() {
+    const a = ADMS[state.adm];
+    const rows = JANELAS.map((k) => MOB_GRID.map((mob) => {
+      const p = { ...base, ...a, mobilidade: mob };
+      return M.vpConsorcio(p, k).vp - M.vpFinanciamento(p).vp;
+    }));
+    const maxNeg = Math.max(1, ...rows.flat().filter((v) => v < 0).map(Math.abs));
+    const maxPos = Math.max(1, ...rows.flat().filter((v) => v > 0));
+    const t = document.getElementById('heat');
+    t.textContent = '';
+    const th = el('thead'); const hr = el('tr'); hr.appendChild(el('th', {}, 'Mês'));
+    MOB_GRID.forEach((m) => hr.appendChild(el('th', {}, m === 0 ? 'R$ 0' : 'R$ ' + m.toLocaleString('pt-BR'))));
+    th.appendChild(hr); t.appendChild(th);
+    const tb = el('tbody');
+    rows.forEach((r, i) => {
+      const tr = el('tr'); tr.appendChild(el('th', {}, String(JANELAS[i])));
+      r.forEach((v, j) => {
+        const c = heatColor(v, v <= 0 ? maxNeg : maxPos);
+        const td = el('td', { title: 'Mês ' + JANELAS[i] + ', ' + brl(MOB_GRID[j]) + '/mês: ' + (v <= 0 ? 'consórcio economiza ' : 'financiamento economiza ') + brl(Math.abs(v)) }, (v <= 0 ? '−' : '+') + mil(Math.abs(v)));
+        td.style.background = c.bg; td.style.color = c.fg;
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+
+  /* ---------- Seção 6: financiamento ---------- */
+  function drawFin() {
+    const t = document.getElementById('tbl-fin');
+    t.textContent = '';
+    const th = el('thead'); const hr = el('tr');
+    ['Taxa', 'Prazo', 'Parcela', 'CET a.a.', 'IOF', 'Total pago (nominal)', 'Custo em VP'].forEach((h, i) => hr.appendChild(el('th', { class: i > 1 ? 'n' : '' }, h)));
+    th.appendChild(hr); t.appendChild(th);
+    const tb = el('tbody');
+    FIN.forEach((f) => [36, 48, 60].forEach((n) => {
+      const p = { ...base, taxaFinM: f.taxaFinM, prazoFin: n, prazoCons: 80 };
+      const r = M.vpFinanciamento(p);
+      const tr = el('tr');
+      [f.nome + ' a.m.', n + '×'].forEach((v) => tr.appendChild(el('td', {}, v)));
+      [brl(r.det.pmt), pct(r.det.cetA), brl(r.det.iof), brl(r.det.totalPago), brl(r.vp)].forEach((v) => tr.appendChild(el('td', { class: 'n' }, v)));
+      tb.appendChild(tr);
+    }));
+    t.appendChild(tb);
+    t.appendChild(el('caption', { style: 'caption-side:bottom;text-align:left;padding:10px 12px;color:var(--ink-2);font-size:0.8125rem' }, 'Carro de R$ 100 mil, 20% de entrada, tarifas de R$ 1.300. Custo em VP inclui a entrada e abate a revenda no mês 80; para comparar, comprar à vista hoje custa ' + brl(M.vpAVista(base).vp) + '.'));
+  }
+
+  /* ---------- Seção 7: lances e sensibilidade ---------- */
+  function drawLance() {
+    const pS = { ...base, ...ADMS[1] };
+    const finM = M.vpFinanciamento(pS).vp;
+    const t = document.getElementById('tbl-lance');
+    t.textContent = '';
+    const combos = [[0, 0], [0.2, 0], [0, 0.3], [0.2, 0.25], [0.2, 0.3]];
+    const th = el('thead'); const hr = el('tr');
+    ['Estratégia de lance (Itaú)', 'Carta', 'Parcela inicial', 'Do bolso no lance', 'VP mês 1', 'VP mês 3', 'VP mês 12'].forEach((h, i) => hr.appendChild(el('th', { class: i ? 'n' : '' }, h)));
+    th.appendChild(hr); t.appendChild(th);
+    const tb = el('tbody');
+    combos.forEach(([l, e]) => {
+      const p = { ...pS, lanceLivrePct: l, lanceEmbutidoPct: e };
+      const c1 = M.vpConsorcio(p, 1);
+      const nome = l === 0 && e === 0 ? 'Sem lance (sorteio)' : [l ? 'livre ' + pct(l, 0) : '', e ? 'embutido ' + pct(e, 0) : ''].filter(Boolean).join(' + ');
+      const tr = el('tr'); tr.appendChild(el('td', {}, nome.charAt(0).toUpperCase() + nome.slice(1)));
+      [brl(c1.det.carta0), brl((c1.det.carta0 * (1 + p.taxaAdm + p.fundoReserva)) / p.prazoCons), brl(c1.det.lanceLivre)].forEach((v) => tr.appendChild(el('td', { class: 'n' }, v)));
+      [1, 3, 12].forEach((k) => { const v = M.vpConsorcio(p, k).vp; tr.appendChild(el('td', { class: 'n ' + (v <= finM ? 'win' : 'lose-t') }, brl(v))); });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    t.appendChild(el('caption', { style: 'caption-side:bottom;text-align:left;padding:10px 12px;color:var(--ink-2);font-size:0.8125rem' }, 'Custo de ficar sem carro de R$ 1.000/mês. Financiamento mediano 48× para comparar: ' + brl(finM) + '. Mesmo com lance, o consórcio contemplado cedo segue bem abaixo do financiamento.'));
+
+    const s = document.getElementById('tbl-sens');
+    s.textContent = '';
+    const th2 = el('thead'); const hr2 = el('tr');
+    ['Taxa de administração', 'VP contemplado no mês 12', 'Vence o financiamento até o mês'].forEach((h, i) => hr2.appendChild(el('th', { class: i ? 'n' : '' }, h)));
+    th2.appendChild(hr2); s.appendChild(th2);
+    const tb2 = el('tbody');
+    [0.065, 0.10, 0.12, 0.136, 0.15, 0.175, 0.20].forEach((ta) => {
+      const p = { ...pS, taxaAdm: ta };
+      const tr = el('tr');
+      const lab = pct(ta) + (ta === 0.065 ? ' (mínimo divulgado)' : ta === 0.175 ? ' (média ABAC)' : ta === 0.10 ? ' (Rodobens)' : ta === 0.12 ? ' (Itaú)' : ta === 0.136 ? ' (Porto)' : '');
+      tr.appendChild(el('td', {}, lab));
+      tr.appendChild(el('td', { class: 'n' }, brl(M.vpConsorcio(p, 12).vp)));
+      const be = M.breakEven(p);
+      tr.appendChild(el('td', { class: 'n' }, be >= p.prazoCons ? 'todos (80)' : String(be)));
+      tb2.appendChild(tr);
+    });
+    s.appendChild(tb2);
+    s.appendChild(el('caption', { style: 'caption-side:bottom;text-align:left;padding:10px 12px;color:var(--ink-2);font-size:0.8125rem' }, 'Prazo de 80 meses, fundo de reserva de 2%, custo de ficar sem carro de R$ 1.000/mês, financiamento mediano 48×.'));
+  }
+
+  /* ---------- Simulador ---------- */
+  const $ = (id) => document.getElementById(id);
+  const num = (id) => { const v = parseFloat($(id).value); return isFinite(v) ? v : 0; };
+  function readSim() {
+    return {
+      ...base,
+      preco: Math.max(1000, num('f-preco')),
+      cdi: num('f-cdi') / 100, ipca: num('f-ipca') / 100, deprec: Math.min(0.9, num('f-dep') / 100), mobilidade: Math.max(0, num('f-mob')),
+      entradaPct: Math.min(0.9, Math.max(0, num('f-ent') / 100)), taxaFinM: Math.max(0.0001, num('f-tx') / 100), prazoFin: parseInt($('f-pf').value, 10), tarifas: Math.max(0, num('f-tar')),
+      taxaAdm: Math.max(0, num('f-ta') / 100), fundoReserva: Math.max(0, num('f-fr') / 100), prazoCons: Math.round(Math.min(200, Math.max(12, num('f-pc')))),
+      lanceLivrePct: Math.min(0.8, Math.max(0, num('f-ll') / 100)), lanceEmbutidoPct: Math.min(0.3, Math.max(0, num('f-le') / 100)),
+    };
+  }
+  function drawSim() {
+    const p = readSim();
+    const admSel = $('f-adm').value;
+    const nome = admSel === 'x' ? 'Consórcio' : ADMS[+admSel].nome;
+    const fin = M.vpFinanciamento(p);
+    const poup = M.vpPoupar(p);
+    const be = M.breakEven(p);
+    const c1 = M.vpConsorcio(p, 1);
+    const esp = M.vpConsorcioEsperado(p);
+    const parcelaC = (c1.det.carta0 * (1 + p.taxaAdm + p.fundoReserva)) / p.prazoCons;
+    const v = $('sim-verdict');
+    v.textContent = '';
+    const b = el('b', {}, be === 0 ? 'Financiar sai mais barato em qualquer janela.' : be >= p.prazoCons ? 'O consórcio vence em qualquer mês de contemplação.' : 'O consórcio vence se a contemplação vier até o mês ' + be + '.');
+    v.appendChild(b);
+    v.appendChild(document.createTextNode(' Contemplado por sorteio em mês aleatório, o custo esperado é ' + brl(esp) + ', contra ' + brl(fin.vp) + ' do financiamento.'));
+    const k = $('sim-kpis');
+    k.textContent = '';
+    const kpi = (l, val, s) => { const d = el('div'); d.appendChild(el('span', { class: 'k-l' }, l)); d.appendChild(el('span', { class: 'k-v' }, val)); if (s) d.appendChild(el('span', { class: 'k-s' }, s)); k.appendChild(d); };
+    kpi('Financiamento, custo em VP', brl(fin.vp), fin.det.n + '× de ' + brl(fin.det.pmt) + ' · CET ' + pct(fin.det.cetA) + ' a.a.');
+    kpi(nome + ', contemplado no mês 1', brl(c1.vp), 'parcela inicial ' + brl(parcelaC) + (c1.det.lanceLivre ? ' · lance ' + brl(c1.det.lanceLivre) : ''));
+    kpi(nome + ', sorteio esperado', brl(esp), 'média das ' + p.prazoCons + ' janelas');
+    kpi('Poupar e comprar à vista', poup ? brl(poup.vp) : '–', poup ? 'compra no mês ' + poup.mes : 'não alcança o preço');
+    kpi('À vista hoje', brl(M.vpAVista(p).vp), 'se tiver o dinheiro');
+    kpi('Consórcio vence até o mês', be === 0 ? 'nenhum' : be >= p.prazoCons ? 'todos' : String(be), 'de ' + p.prazoCons + ' possíveis');
+    drawCurve($('plot-sim'), $('legend-sim'), {
+      W: 600, H: 320, p, adms: [{ nome, cor: '--s' + (admSel === 'x' ? 1 : +admSel + 1), taxaAdm: p.taxaAdm, fundoReserva: p.fundoReserva, prazoCons: p.prazoCons }],
+      refs: { fin: fin.vp, finLabel: 'Financiamento ' + pct(p.taxaFinM, 2) + ' a.m., ' + p.prazoFin + '×', poupar: poup ? poup.vp : null },
+    });
+  }
+  $('f-adm').addEventListener('change', () => {
+    const v = $('f-adm').value;
+    if (v !== 'x') { const a = ADMS[+v]; $('f-ta').value = +(a.taxaAdm * 100).toFixed(1); $('f-fr').value = a.fundoReserva * 100; $('f-pc').value = a.prazoCons; }
+    drawSim();
+  });
+  ['f-ta', 'f-fr', 'f-pc'].forEach((id) => $(id).addEventListener('input', () => { $('f-adm').value = 'x'; }));
+  $('form').addEventListener('input', drawSim);
+  $('form').addEventListener('submit', (e) => e.preventDefault());
+
+  /* ---------- Controles ---------- */
+  function seg(id, key, cb) {
+    const g = document.getElementById(id);
+    g.addEventListener('click', (e) => {
+      const btn = e.target.closest('button'); if (!btn) return;
+      g.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      state[key] = +btn.dataset.v; cb();
+    });
+  }
+  seg('seg-mob', 'mob', drawMain);
+  seg('seg-prazo', 'prazoFin', drawMain);
+  seg('seg-adm', 'adm', drawHeat);
+
+  function all() { drawCarne(); drawMain(); drawHeat(); drawFin(); drawLance(); drawSim(); }
+  all();
+  // redesenha ao trocar o tema (cores vêm dos tokens)
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  if (mq.addEventListener) mq.addEventListener('change', all);
+  new MutationObserver(all).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>
+
+</body>
+</html>
